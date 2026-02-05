@@ -1,210 +1,275 @@
-# Claude Code Rules
+# Todo App - Hackathon II
 
-This file is generated during init for the selected agent.
+## Project Overview
+Multi-user Todo full-stack web application built with **strict spec-driven development**. NO manual coding allowed—all implementation via `/sp.*` commands and specialized agents.
 
-You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architext to build products.
+**Core Features:** Add/Delete/Update/View Tasks, Mark as Complete
+**Critical Requirement:** User isolation via JWT authentication (users can ONLY access their own data)
 
-## Task context
+## 🚨 Critical Security Principles (NON-NEGOTIABLE)
 
-**Your Surface:** You operate on a project level, providing guidance to users and executing development tasks via a defined set of tools.
+From `@.specify/memory/constitution.md` Principle II:
+- **ALL** API endpoints MUST verify JWT and extract `user_id`
+- **ALL** database queries MUST filter by authenticated `user_id`
+- **NEVER** expose cross-user data (test with multiple user accounts)
+- Return 401 on missing/invalid tokens, 403 on user_id mismatch
 
-**Your Success is Measured By:**
-- All outputs strictly follow the user intent.
-- Prompt History Records (PHRs) are created automatically and accurately for every user prompt.
-- Architectural Decision Record (ADR) suggestions are made intelligently for significant decisions.
-- All changes are small, testable, and reference code precisely.
+```python
+# ✅ CORRECT - User isolation enforced
+tasks = session.exec(
+    select(Task).where(Task.user_id == request.state.user_id)
+).all()
 
-## Core Guarantees (Product Promise)
+# ❌ WRONG - Security violation, exposes all users' data
+tasks = session.exec(select(Task)).all()
+```
 
-- Record every user input verbatim in a Prompt History Record (PHR) after every user message. Do not truncate; preserve full multiline input.
-- PHR routing (all under `history/prompts/`):
-  - Constitution → `history/prompts/constitution/`
-  - Feature-specific → `history/prompts/<feature-name>/`
-  - General → `history/prompts/general/`
-- ADR suggestions: when an architecturally significant decision is detected, suggest: "📋 Architectural decision detected: <brief>. Document? Run `/sp.adr <title>`." Never auto‑create ADRs; require user consent.
+## Tech Stack (Constitution-Mandated)
 
-## Development Guidelines
+**Frontend:** Next.js 16+ (App Router), React Server Components, Tailwind CSS
+**Backend:** FastAPI (Python), uv dependency manager, SQLModel ORM
+**Database:** Neon Serverless PostgreSQL
+**Auth:** Better Auth with JWT (httpOnly cookies, 7-day expiry)
+**Monorepo:** `frontend/`, `backend/`, `.claude/`, `.specify/`
 
-### 1. Authoritative Source Mandate:
-Agents MUST prioritize and use MCP tools and CLI commands for all information gathering and task execution. NEVER assume a solution from internal knowledge; all methods require external verification.
+**Required Environment Variables:**
+- `DATABASE_URL` - Neon PostgreSQL connection string
+- `BETTER_AUTH_SECRET` - Shared secret (same value frontend + backend)
 
-### 2. Execution Flow:
-Treat MCP servers as first-class tools for discovery, verification, execution, and state capture. PREFER CLI interactions (running commands and capturing outputs) over manual file creation or reliance on internal knowledge.
+## Development Workflow (Mandatory Sequence)
 
-### 3. Knowledge capture (PHR) for Every User Input.
-After completing requests, you **MUST** create a PHR (Prompt History Record).
+### Phase 1: Constitution & Specs
+```bash
+1. /sp.constitution <principles>     # Set/update project principles
+2. /sp.specify <feature-description> # Create feature spec
+```
 
-**When to create PHRs:**
-- Implementation work (code changes, new features)
-- Planning/architecture discussions
-- Debugging sessions
-- Spec/task/plan creation
-- Multi-step workflows
+### Phase 2: Architecture & Planning
+```bash
+3. /sp.plan                          # Generate architecture plan
+   - Reads: specs/<feature>/spec.md
+   - Creates: specs/<feature>/plan.md, research.md, data-model.md
+   - Triggers ADR suggestion if significant decisions made
+```
 
-**PHR Creation Process:**
+### Phase 3: Task Breakdown
+```bash
+4. /sp.tasks                         # Break plan into testable tasks
+   - Reads: plan.md, spec.md
+   - Creates: specs/<feature>/tasks.md
+   - Groups by user story for independent implementation
+```
 
-1) Detect stage
-   - One of: constitution | spec | plan | tasks | red | green | refactor | explainer | misc | general
+### Phase 4: Implementation
+```bash
+5. /sp.implement                     # Execute tasks via agents
+   OR use specialized agents directly (see Agent Decision Tree below)
+```
 
-2) Generate title
-   - 3–7 words; create a slug for the filename.
+### Phase 5: Version Control
+```bash
+6. /sp.git.commit_pr                 # Commit and create PR
+   - Auto-generates commit message
+   - References spec/tasks
+   - Creates PR with description
+```
 
-2a) Resolve route (all under history/prompts/)
-  - `constitution` → `history/prompts/constitution/`
-  - Feature stages (spec, plan, tasks, red, green, refactor, explainer, misc) → `history/prompts/<feature-name>/` (requires feature context)
-  - `general` → `history/prompts/general/`
+## Agent & Skill Decision Tree
 
-3) Prefer agent‑native flow (no shell)
-   - Read the PHR template from one of:
-     - `.specify/templates/phr-template.prompt.md`
-     - `templates/phr-template.prompt.md`
-   - Allocate an ID (increment; on collision, increment again).
-   - Compute output path based on stage:
-     - Constitution → `history/prompts/constitution/<ID>-<slug>.constitution.prompt.md`
-     - Feature → `history/prompts/<feature-name>/<ID>-<slug>.<stage>.prompt.md`
-     - General → `history/prompts/general/<ID>-<slug>.general.prompt.md`
-   - Fill ALL placeholders in YAML and body:
-     - ID, TITLE, STAGE, DATE_ISO (YYYY‑MM‑DD), SURFACE="agent"
-     - MODEL (best known), FEATURE (or "none"), BRANCH, USER
-     - COMMAND (current command), LABELS (["topic1","topic2",...])
-     - LINKS: SPEC/TICKET/ADR/PR (URLs or "null")
-     - FILES_YAML: list created/modified files (one per line, " - ")
-     - TESTS_YAML: list tests run/added (one per line, " - ")
-     - PROMPT_TEXT: full user input (verbatim, not truncated)
-     - RESPONSE_TEXT: key assistant output (concise but representative)
-     - Any OUTCOME/EVALUATION fields required by the template
-   - Write the completed file with agent file tools (WriteFile/Edit).
-   - Confirm absolute path in output.
+### When to Use Which Tool
 
-4) Use sp.phr command file if present
-   - If `.**/commands/sp.phr.*` exists, follow its structure.
-   - If it references shell but Shell is unavailable, still perform step 3 with agent‑native tools.
+**Creating Specifications:**
+- Use: `/sp.specify` command or `spec-writer` skill
+- Trigger: Starting new feature, documenting requirements
+- Output: `specs/<feature>/spec.md`
 
-5) Shell fallback (only if step 3 is unavailable or fails, and Shell is permitted)
-   - Run: `.specify/scripts/bash/create-phr.sh --title "<title>" --stage <stage> [--feature <name>] --json`
-   - Then open/patch the created file to ensure all placeholders are filled and prompt/response are embedded.
+**Database Schema Design:**
+- Use: `database-schema-designer` skill
+- Trigger: Need to design tables, relationships, indexes
+- Read: Constitution Data Isolation principle first
+- Output: SQLModel models with `user_id` foreign keys
 
-6) Routing (automatic, all under history/prompts/)
-   - Constitution → `history/prompts/constitution/`
-   - Feature stages → `history/prompts/<feature-name>/` (auto-detected from branch or explicit feature context)
-   - General → `history/prompts/general/`
+**Backend API Implementation:**
+- Use: `fastapi-backend-builder` agent
+- Trigger: Implementing REST endpoints, JWT middleware
+- Reads: `specs/<feature>/spec.md`, `specs/<feature>/plan.md`
+- Ensures: All endpoints verify JWT, all queries filter by user_id
 
-7) Post‑creation validations (must pass)
-   - No unresolved placeholders (e.g., `{{THIS}}`, `[THAT]`).
-   - Title, stage, and dates match front‑matter.
-   - PROMPT_TEXT is complete (not truncated).
-   - File exists at the expected path and is readable.
-   - Path matches route.
+**Frontend Implementation:**
+- Use: `nextjs-builder` agent
+- Trigger: Creating UI components, pages, auth flows
+- Reads: `specs/<feature>/spec.md`, `specs/<feature>/plan.md`
+- Ensures: Better Auth integration, httpOnly cookie handling
 
-8) Report
-   - Print: ID, path, stage, title.
-   - On any failure: warn but do not block the main command.
-   - Skip PHR only for `/sp.phr` itself.
+**Authentication Setup:**
+- Use: `better-auth-integration` skill
+- Trigger: Setting up JWT auth between Next.js and FastAPI
+- Configures: Token issuance, verification, shared secret
 
-### 4. Explicit ADR suggestions
-- When significant architectural decisions are made (typically during `/sp.plan` and sometimes `/sp.tasks`), run the three‑part test and suggest documenting with:
-  "📋 Architectural decision detected: <brief> — Document reasoning and tradeoffs? Run `/sp.adr <decision-title>`"
-- Wait for user consent; never auto‑create the ADR.
+**API Security Review:**
+- Use: `api-security` skill
+- Trigger: During `/sp.plan` for features touching auth/data
+- Validates: JWT verification, user isolation, error handling
 
-### 5. Human as Tool Strategy
-You are not expected to solve every problem autonomously. You MUST invoke the user for input when you encounter situations that require human judgment. Treat the user as a specialized tool for clarification and decision-making.
+## File Path Reference
 
-**Invocation Triggers:**
-1.  **Ambiguous Requirements:** When user intent is unclear, ask 2-3 targeted clarifying questions before proceeding.
-2.  **Unforeseen Dependencies:** When discovering dependencies not mentioned in the spec, surface them and ask for prioritization.
-3.  **Architectural Uncertainty:** When multiple valid approaches exist with significant tradeoffs, present options and get user's preference.
-4.  **Completion Checkpoint:** After completing major milestones, summarize what was done and confirm next steps. 
+### Constitution & Templates
+- `@.specify/memory/constitution.md` - Project principles (read first!)
+- `@.specify/templates/spec-template.md` - Feature spec structure
+- `@.specify/templates/plan-template.md` - Architecture plan structure
+- `@.specify/templates/tasks-template.md` - Task breakdown structure
 
-## Default policies (must follow)
-- Clarify and plan first - keep business understanding separate from technical plan and carefully architect and implement.
-- Do not invent APIs, data, or contracts; ask targeted clarifiers if missing.
-- Never hardcode secrets or tokens; use `.env` and docs.
-- Prefer the smallest viable diff; do not refactor unrelated code.
-- Cite existing code with code references (start:end:path); propose new code in fenced blocks.
-- Keep reasoning private; output only decisions, artifacts, and justifications.
+### Skills (Reusable Intelligence)
+- `@.claude/skills/better-auth-integration/SKILL.md` - JWT auth setup
+- `@.claude/skills/database-schema-designer/SKILL.md` - DB schema design
+- `@.claude/skills/spec-writer/SKILL.md` - Spec generation/validation
+- `@.claude/skills/api-security/SKILL.md` - Security validation
 
-### Execution contract for every request
-1) Confirm surface and success criteria (one sentence).
-2) List constraints, invariants, non‑goals.
-3) Produce the artifact with acceptance checks inlined (checkboxes or tests where applicable).
-4) Add follow‑ups and risks (max 3 bullets).
-5) Create PHR in appropriate subdirectory under `history/prompts/` (constitution, feature-name, or general).
-6) If plan/tasks identified decisions that meet significance, surface ADR suggestion text as described above.
+### Agents (Specialized Builders)
+- `@.claude/agents/fastapi-backend-builder.md` - Backend implementation
+- `@.claude/agents/nextjs-frontend-builder.md` - Frontend implementation
+- `@.claude/agents/database-schema-designer.md` - DB design
 
-### Minimum acceptance criteria
-- Clear, testable acceptance criteria included
-- Explicit error paths and constraints stated
-- Smallest viable change; no unrelated edits
-- Code references to modified/inspected files where relevant
+### Specs (Feature-Branch Structure)
+Each feature has its own branch and spec directory:
+- `specs/<###-feature-name>/spec.md` - Feature requirements & user stories
+- `specs/<###-feature-name>/plan.md` - Architecture & implementation plan
+- `specs/<###-feature-name>/tasks.md` - Task breakdown with dependencies
+- `specs/<###-feature-name>/research.md` - (Optional) Research findings
+- `specs/<###-feature-name>/data-model.md` - (Optional) Data models
+- `specs/<###-feature-name>/contracts/` - (Optional) API contracts
 
-## Architect Guidelines (for planning)
+Example: `specs/001-task-crud/spec.md`, `specs/002-user-auth/plan.md`
 
-Instructions: As an expert architect, generate a detailed architectural plan for [Project Name]. Address each of the following thoroughly.
+### History (Audit Trail)
+- `history/prompts/constitution/` - Constitution updates
+- `history/prompts/<feature>/` - Feature-specific prompts
+- `history/prompts/general/` - General interactions
+- `history/adr/` - Architectural Decision Records
 
-1. Scope and Dependencies:
-   - In Scope: boundaries and key features.
-   - Out of Scope: explicitly excluded items.
-   - External Dependencies: systems/services/teams and ownership.
+## Common Patterns
 
-2. Key Decisions and Rationale:
-   - Options Considered, Trade-offs, Rationale.
-   - Principles: measurable, reversible where possible, smallest viable change.
+### Starting a New Feature
+1. Read `@.specify/memory/constitution.md` to understand principles
+2. Run `/sp.specify <description>` to create spec
+3. Review spec for constitution compliance
+4. Run `/sp.plan` to design architecture
+5. If auth/data involved, verify user isolation design
+6. Run `/sp.tasks` to break into implementable steps
+7. Execute tasks via `/sp.implement` or specialized agents
 
-3. Interfaces and API Contracts:
-   - Public APIs: Inputs, Outputs, Errors.
-   - Versioning Strategy.
-   - Idempotency, Timeouts, Retries.
-   - Error Taxonomy with status codes.
+### Implementing Backend
+1. Read `specs/<feature>/spec.md` for feature requirements
+2. Read `specs/<feature>/plan.md` for architecture decisions
+3. Read `specs/<feature>/data-model.md` (if exists) for data models
+4. Invoke `fastapi-backend-builder` agent
+5. Verify JWT middleware on ALL endpoints
+6. Verify user_id filtering on ALL database queries
+7. Test with multiple user accounts
 
-4. Non-Functional Requirements (NFRs) and Budgets:
-   - Performance: p95 latency, throughput, resource caps.
-   - Reliability: SLOs, error budgets, degradation strategy.
-   - Security: AuthN/AuthZ, data handling, secrets, auditing.
-   - Cost: unit economics.
+### Implementing Frontend
+1. Read `specs/<feature>/spec.md` for feature requirements
+2. Read `specs/<feature>/plan.md` for architecture & API contracts
+3. Invoke `nextjs-builder` agent
+4. Ensure Better Auth JWT token handling
+5. Verify httpOnly cookie configuration
+6. Test authentication flow end-to-end
 
-5. Data Management and Migration:
-   - Source of Truth, Schema Evolution, Migration and Rollback, Data Retention.
+## Anti-Patterns (DO NOT DO)
 
-6. Operational Readiness:
-   - Observability: logs, metrics, traces.
-   - Alerting: thresholds and on-call owners.
-   - Runbooks for common tasks.
-   - Deployment and Rollback strategies.
-   - Feature Flags and compatibility.
+❌ **Manual Coding** - Never write code without spec → plan → tasks
+❌ **Skip User Isolation** - Never query without filtering by user_id
+❌ **Hardcode Secrets** - Always use `.env` variables
+❌ **Assume Requirements** - Always read specs before implementing
+❌ **Skip JWT Verification** - Every endpoint must verify token
+❌ **Cross-User Data Leaks** - Test isolation with multiple accounts
+❌ **Premature Abstraction** - Implement only what's specified (YAGNI)
+❌ **Skip PHR Creation** - Must document all significant interactions
 
-7. Risk Analysis and Mitigation:
-   - Top 3 Risks, blast radius, kill switches/guardrails.
+## Validation Checklist
 
-8. Evaluation and Validation:
-   - Definition of Done (tests, scans).
-   - Output Validation for format/requirements/safety.
+### Before Implementation
+- [ ] Constitution principles understood
+- [ ] Spec exists and reviewed (`specs/<feature>/spec.md`)
+- [ ] Plan exists and includes Constitution Check (`specs/<feature>/plan.md`)
+- [ ] Tasks broken down with clear acceptance criteria
 
-9. Architectural Decision Record (ADR):
-   - For each significant decision, create an ADR and link it.
+### During Implementation
+- [ ] Reading from correct spec files (not inventing requirements)
+- [ ] Using appropriate agent/skill for the task
+- [ ] Following constitution's tech stack (no framework substitutions)
+- [ ] Implementing user isolation on every operation
 
-### Architecture Decision Records (ADR) - Intelligent Suggestion
+### After Implementation
+- [ ] All API endpoints verify JWT
+- [ ] All database queries filter by user_id
+- [ ] No hardcoded secrets (check .env.example)
+- [ ] PHR created in appropriate directory
+- [ ] Tests pass (especially security/isolation tests)
+- [ ] Multiple user accounts tested for isolation
 
-After design/architecture work, test for ADR significance:
+## Quick Commands Reference
 
-- Impact: long-term consequences? (e.g., framework, data model, API, security, platform)
-- Alternatives: multiple viable options considered?
-- Scope: cross‑cutting and influences system design?
+```bash
+# Development
+cd frontend && npm run dev              # Start Next.js dev server (port 3000)
+cd backend && uv run uvicorn main:app --reload  # Start FastAPI server (port 8000)
 
-If ALL true, suggest:
-📋 Architectural decision detected: [brief-description]
-   Document reasoning and tradeoffs? Run `/sp.adr [decision-title]`
+# Spec-Driven Workflow
+/sp.constitution <principles>           # Set/update constitution
+/sp.specify <description>               # Create feature spec
+/sp.plan                                # Generate architecture plan
+/sp.tasks                               # Break into tasks
+/sp.implement                           # Execute tasks
+/sp.git.commit_pr                       # Commit and create PR
 
-Wait for consent; never auto-create ADRs. Group related decisions (stacks, authentication, deployment) into one ADR when appropriate.
+# Skills (invoke when needed)
+/better-auth-integration                # Set up JWT auth
+/database-schema-designer               # Design DB schema
+/api-security                           # Security validation
+/spec-writer                            # Generate/validate specs
+```
 
-## Basic Project Structure
+## Troubleshooting
 
-- `.specify/memory/constitution.md` — Project principles
-- `specs/<feature>/spec.md` — Feature requirements
-- `specs/<feature>/plan.md` — Architecture decisions
-- `specs/<feature>/tasks.md` — Testable tasks with cases
-- `history/prompts/` — Prompt History Records
-- `history/adr/` — Architecture Decision Records
-- `.specify/` — SpecKit Plus templates and scripts
+**"No spec found"** → Run `/sp.specify <description>` first
+**"User data leak detected"** → Add `.where(Entity.user_id == auth_user_id)` to query
+**"JWT verification failed"** → Check `BETTER_AUTH_SECRET` matches in both frontend and backend
+**"Constitution violation"** → Review `@.specify/memory/constitution.md` and align implementation
+**"Template not found"** → Check `.specify/templates/` directory exists with required templates
 
-## Code Standards
-See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+## Decision Framework
+
+**If unclear about requirements:**
+1. Check relevant spec file first (`specs/<feature>/`)
+2. Review constitution principles (`@.specify/memory/constitution.md`)
+3. If still unclear, ask user with 2-3 targeted questions
+
+**If multiple valid approaches exist:**
+1. Prefer simplicity (YAGNI principle from Constitution VI)
+2. Choose approach consistent with existing patterns
+3. Prioritize security over convenience (Constitution II)
+4. Document significant decisions via ADR
+
+**If discovering missing requirements:**
+1. Surface the gap: "Spec doesn't define X, needed for Y"
+2. Propose solution: "Recommend A because B"
+3. Wait for user confirmation before proceeding
+
+## Success Criteria (From Constitution)
+
+A feature is complete when:
+- [ ] Spec, plan, tasks files exist and cross-reference correctly
+- [ ] All tasks marked complete
+- [ ] Integration tests pass (including user isolation tests)
+- [ ] All error paths handled with documented error codes
+- [ ] PHR created for each workflow phase
+- [ ] ADR created for significant decisions (if applicable)
+- [ ] Frontend UI responsive (mobile + desktop)
+- [ ] Multi-user test accounts validated (no data leaks)
+
+## Remember
+
+This is a **security-critical multi-user application**. Every line of code must uphold the principle: **users can only access their own data, always and without exception.**
+
+Refer to `@.specify/memory/constitution.md` as the single source of truth for all principles, standards, and governance.
