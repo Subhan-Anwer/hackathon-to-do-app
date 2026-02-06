@@ -3,6 +3,11 @@
 Production-grade FastAPI application with JWT authentication, user isolation,
 and PostgreSQL async database operations.
 """
+from dotenv import load_dotenv
+
+# Load environment variables from .env file BEFORE other imports
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager

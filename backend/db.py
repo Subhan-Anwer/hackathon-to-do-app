@@ -6,6 +6,10 @@ asyncpg driver and provides dependency injection for FastAPI routes.
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Read DATABASE_URL from environment
 DATABASE_URL = os.getenv("DATABASE_URL")
