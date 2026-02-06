@@ -28,7 +28,7 @@ async function TasksContent({ userId }: { userId: string }) {
   let tasks: Awaited<ReturnType<typeof taskApi.list>> = [];
   try {
     tasks = await taskApi.list(userId);
-  } catch (error) {
+  } catch {
     // Failed to fetch tasks - return empty array to show empty state
     tasks = [];
   }

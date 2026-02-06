@@ -69,7 +69,7 @@ export function SignupForm() {
 
       toast.success("Account created successfully!");
       router.push("/tasks");
-    } catch (error) {
+    } catch {
       toast.error("An error occurred. Please try again.");
       setLoading(false);
     }

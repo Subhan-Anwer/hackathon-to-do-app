@@ -91,7 +91,7 @@ export function DeleteTaskDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Task</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete "{taskTitle}"? This action cannot be
+            Are you sure you want to delete &ldquo;{taskTitle}&rdquo;? This action cannot be
             undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
