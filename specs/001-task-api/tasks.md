@@ -125,26 +125,26 @@
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T044 [P] [US3] Write test for PATCH /complete returns 401 when no token in backend/tests/test_auth.py
-- [ ] T045 [P] [US3] Write test for PATCH /complete returns 403 when user_id mismatch in backend/tests/test_isolation.py
-- [ ] T046 [P] [US3] Write test for PATCH /complete returns 404 when trying to complete other user's task in backend/tests/test_isolation.py
-- [ ] T047 [P] [US3] Write test for PATCH /complete toggles incomplete to complete in backend/tests/test_tasks.py
-- [ ] T048 [P] [US3] Write test for PATCH /complete toggles complete back to incomplete in backend/tests/test_tasks.py
+- [X] T044 [P] [US3] Write test for PATCH /complete returns 401 when no token in backend/tests/test_auth.py
+- [X] T045 [P] [US3] Write test for PATCH /complete returns 403 when user_id mismatch in backend/tests/test_isolation.py
+- [X] T046 [P] [US3] Write test for PATCH /complete returns 404 when trying to complete other user's task in backend/tests/test_isolation.py
+- [X] T047 [P] [US3] Write test for PATCH /complete toggles incomplete to complete in backend/tests/test_tasks.py
+- [X] T048 [P] [US3] Write test for PATCH /complete toggles complete back to incomplete in backend/tests/test_tasks.py
 
 ### Implementation for User Story 3
 
-- [ ] T049 [US3] Implement toggle_task_completion endpoint PATCH /api/{user_id}/tasks/{task_id}/complete in backend/routers/tasks.py
-- [ ] T050 [US3] Add user_id path parameter validation (verify matches current_user_id) in toggle_task_completion endpoint
-- [ ] T051 [US3] Add HTTPException 403 Forbidden when user_id mismatch in toggle_task_completion endpoint
-- [ ] T052 [US3] Add database query with double filter: task_id AND user_id in toggle_task_completion endpoint
-- [ ] T053 [US3] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in toggle_task_completion endpoint
-- [ ] T054 [US3] Toggle task.completed status with 'not task.completed' in toggle_task_completion endpoint
-- [ ] T055 [US3] Update task.updated_at timestamp to datetime.utcnow() in toggle_task_completion endpoint
-- [ ] T056 [US3] Commit changes and refresh task in toggle_task_completion endpoint
-- [ ] T057 [US3] Add logging for successful completion toggle in toggle_task_completion endpoint
-- [ ] T058 [US3] Return TaskRead response model in toggle_task_completion endpoint
+- [X] T049 [US3] Implement toggle_task_completion endpoint PATCH /api/{user_id}/tasks/{task_id}/complete in backend/routers/tasks.py
+- [X] T050 [US3] Add user_id path parameter validation (verify matches current_user_id) in toggle_task_completion endpoint
+- [X] T051 [US3] Add HTTPException 403 Forbidden when user_id mismatch in toggle_task_completion endpoint
+- [X] T052 [US3] Add database query with double filter: task_id AND user_id in toggle_task_completion endpoint
+- [X] T053 [US3] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in toggle_task_completion endpoint
+- [X] T054 [US3] Toggle task.completed status with 'not task.completed' in toggle_task_completion endpoint
+- [X] T055 [US3] Update task.updated_at timestamp to datetime.utcnow() in toggle_task_completion endpoint
+- [X] T056 [US3] Commit changes and refresh task in toggle_task_completion endpoint
+- [X] T057 [US3] Add logging for successful completion toggle in toggle_task_completion endpoint
+- [X] T058 [US3] Return TaskRead response model in toggle_task_completion endpoint
 
-**Checkpoint**: User Stories 1, 2, AND 3 complete - full task lifecycle (create, list, complete)
+**Checkpoint**: ✅ User Stories 1, 2, AND 3 complete - full task lifecycle (create, list, complete)
 
 ---
 
@@ -156,28 +156,28 @@
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T059 [P] [US4] Write test for PUT /tasks/{task_id} returns 401 when no token in backend/tests/test_auth.py
-- [ ] T060 [P] [US4] Write test for PUT /tasks/{task_id} returns 403 when user_id mismatch in backend/tests/test_isolation.py
-- [ ] T061 [P] [US4] Write test for PUT /tasks/{task_id} returns 404 when trying to update other user's task in backend/tests/test_isolation.py
-- [ ] T062 [P] [US4] Write test for PUT updates title only (partial update) in backend/tests/test_tasks.py
-- [ ] T063 [P] [US4] Write test for PUT updates description only (partial update) in backend/tests/test_tasks.py
-- [ ] T064 [P] [US4] Write test for PUT updates completed status in backend/tests/test_tasks.py
-- [ ] T065 [P] [US4] Write test for PUT returns 422 when title exceeds 200 chars in backend/tests/test_tasks.py
+- [X] T059 [P] [US4] Write test for PUT /tasks/{task_id} returns 401 when no token in backend/tests/test_auth.py
+- [X] T060 [P] [US4] Write test for PUT /tasks/{task_id} returns 403 when user_id mismatch in backend/tests/test_isolation.py
+- [X] T061 [P] [US4] Write test for PUT /tasks/{task_id} returns 404 when trying to update other user's task in backend/tests/test_isolation.py
+- [X] T062 [P] [US4] Write test for PUT updates title only (partial update) in backend/tests/test_tasks.py
+- [X] T063 [P] [US4] Write test for PUT updates description only (partial update) in backend/tests/test_tasks.py
+- [X] T064 [P] [US4] Write test for PUT updates completed status in backend/tests/test_tasks.py
+- [X] T065 [P] [US4] Write test for PUT returns 422 when title exceeds 200 chars in backend/tests/test_tasks.py
 
 ### Implementation for User Story 4
 
-- [ ] T066 [US4] Implement update_task endpoint PUT /api/{user_id}/tasks/{task_id} in backend/routers/tasks.py
-- [ ] T067 [US4] Add user_id path parameter validation (verify matches current_user_id) in update_task endpoint
-- [ ] T068 [US4] Add HTTPException 403 Forbidden when user_id mismatch in update_task endpoint
-- [ ] T069 [US4] Add database query with double filter: task_id AND user_id in update_task endpoint
-- [ ] T070 [US4] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in update_task endpoint
-- [ ] T071 [US4] Implement partial update logic (update only provided fields from TaskUpdate) in update_task endpoint
-- [ ] T072 [US4] Update task.updated_at timestamp to datetime.utcnow() in update_task endpoint
-- [ ] T073 [US4] Commit changes and refresh task in update_task endpoint
-- [ ] T074 [US4] Add logging for successful task update in update_task endpoint
-- [ ] T075 [US4] Return TaskRead response model in update_task endpoint
+- [X] T066 [US4] Implement update_task endpoint PUT /api/{user_id}/tasks/{task_id} in backend/routers/tasks.py
+- [X] T067 [US4] Add user_id path parameter validation (verify matches current_user_id) in update_task endpoint
+- [X] T068 [US4] Add HTTPException 403 Forbidden when user_id mismatch in update_task endpoint
+- [X] T069 [US4] Add database query with double filter: task_id AND user_id in update_task endpoint
+- [X] T070 [US4] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in update_task endpoint
+- [X] T071 [US4] Implement partial update logic (update only provided fields from TaskUpdate) in update_task endpoint
+- [X] T072 [US4] Update task.updated_at timestamp to datetime.utcnow() in update_task endpoint
+- [X] T073 [US4] Commit changes and refresh task in update_task endpoint
+- [X] T074 [US4] Add logging for successful task update in update_task endpoint
+- [X] T075 [US4] Return TaskRead response model in update_task endpoint
 
-**Checkpoint**: User Stories 1-4 complete - full task management (create, list, complete, update)
+**Checkpoint**: ✅ User Stories 1-4 complete - full task management (create, list, complete, update)
 
 ---
 
@@ -189,23 +189,23 @@
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T076 [P] [US5] Write test for GET /tasks/{task_id} returns 401 when no token in backend/tests/test_auth.py
-- [ ] T077 [P] [US5] Write test for GET /tasks/{task_id} returns 403 when user_id mismatch in backend/tests/test_isolation.py
-- [ ] T078 [P] [US5] Write test for GET /tasks/{task_id} returns 404 when requesting other user's task in backend/tests/test_isolation.py
-- [ ] T079 [P] [US5] Write test for GET /tasks/{task_id} returns 404 when task doesn't exist in backend/tests/test_tasks.py
-- [ ] T080 [P] [US5] Write test for GET /tasks/{task_id} returns full task details in backend/tests/test_tasks.py
+- [X] T076 [P] [US5] Write test for GET /tasks/{task_id} returns 401 when no token in backend/tests/test_auth.py
+- [X] T077 [P] [US5] Write test for GET /tasks/{task_id} returns 403 when user_id mismatch in backend/tests/test_isolation.py
+- [X] T078 [P] [US5] Write test for GET /tasks/{task_id} returns 404 when requesting other user's task in backend/tests/test_isolation.py
+- [X] T079 [P] [US5] Write test for GET /tasks/{task_id} returns 404 when task doesn't exist in backend/tests/test_tasks.py
+- [X] T080 [P] [US5] Write test for GET /tasks/{task_id} returns full task details in backend/tests/test_tasks.py
 
 ### Implementation for User Story 5
 
-- [ ] T081 [US5] Implement get_task endpoint GET /api/{user_id}/tasks/{task_id} in backend/routers/tasks.py
-- [ ] T082 [US5] Add user_id path parameter validation (verify matches current_user_id) in get_task endpoint
-- [ ] T083 [US5] Add HTTPException 403 Forbidden when user_id mismatch in get_task endpoint
-- [ ] T084 [US5] Add database query with double filter: task_id AND user_id in get_task endpoint
-- [ ] T085 [US5] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in get_task endpoint
-- [ ] T086 [US5] Add logging for successful task retrieval in get_task endpoint
-- [ ] T087 [US5] Return TaskRead response model in get_task endpoint
+- [X] T081 [US5] Implement get_task endpoint GET /api/{user_id}/tasks/{task_id} in backend/routers/tasks.py
+- [X] T082 [US5] Add user_id path parameter validation (verify matches current_user_id) in get_task endpoint
+- [X] T083 [US5] Add HTTPException 403 Forbidden when user_id mismatch in get_task endpoint
+- [X] T084 [US5] Add database query with double filter: task_id AND user_id in get_task endpoint
+- [X] T085 [US5] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in get_task endpoint
+- [X] T086 [US5] Add logging for successful task retrieval in get_task endpoint
+- [X] T087 [US5] Return TaskRead response model in get_task endpoint
 
-**Checkpoint**: User Stories 1-5 complete - full read/write capabilities
+**Checkpoint**: ✅ User Stories 1-5 complete - full read/write capabilities
 
 ---
 
@@ -217,24 +217,24 @@
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T088 [P] [US6] Write test for DELETE /tasks/{task_id} returns 401 when no token in backend/tests/test_auth.py
-- [ ] T089 [P] [US6] Write test for DELETE /tasks/{task_id} returns 403 when user_id mismatch in backend/tests/test_isolation.py
-- [ ] T090 [P] [US6] Write test for DELETE /tasks/{task_id} returns 404 when trying to delete other user's task in backend/tests/test_isolation.py
-- [ ] T091 [P] [US6] Write test for DELETE permanently removes task (verify not in list) in backend/tests/test_tasks.py
-- [ ] T092 [P] [US6] Write test for DELETE returns success response in backend/tests/test_tasks.py
+- [X] T088 [P] [US6] Write test for DELETE /tasks/{task_id} returns 401 when no token in backend/tests/test_auth.py
+- [X] T089 [P] [US6] Write test for DELETE /tasks/{task_id} returns 403 when user_id mismatch in backend/tests/test_isolation.py
+- [X] T090 [P] [US6] Write test for DELETE /tasks/{task_id} returns 404 when trying to delete other user's task in backend/tests/test_isolation.py
+- [X] T091 [P] [US6] Write test for DELETE permanently removes task (verify not in list) in backend/tests/test_tasks.py
+- [X] T092 [P] [US6] Write test for DELETE returns success response in backend/tests/test_tasks.py
 
 ### Implementation for User Story 6
 
-- [ ] T093 [US6] Implement delete_task endpoint DELETE /api/{user_id}/tasks/{task_id} in backend/routers/tasks.py
-- [ ] T094 [US6] Add user_id path parameter validation (verify matches current_user_id) in delete_task endpoint
-- [ ] T095 [US6] Add HTTPException 403 Forbidden when user_id mismatch in delete_task endpoint
-- [ ] T096 [US6] Add database query with double filter: task_id AND user_id in delete_task endpoint
-- [ ] T097 [US6] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in delete_task endpoint
-- [ ] T098 [US6] Delete task from database and commit in delete_task endpoint
-- [ ] T099 [US6] Add logging for successful task deletion in delete_task endpoint
-- [ ] T100 [US6] Return {"success": true} response in delete_task endpoint
+- [X] T093 [US6] Implement delete_task endpoint DELETE /api/{user_id}/tasks/{task_id} in backend/routers/tasks.py
+- [X] T094 [US6] Add user_id path parameter validation (verify matches current_user_id) in delete_task endpoint
+- [X] T095 [US6] Add HTTPException 403 Forbidden when user_id mismatch in delete_task endpoint
+- [X] T096 [US6] Add database query with double filter: task_id AND user_id in delete_task endpoint
+- [X] T097 [US6] Add HTTPException 404 Not Found when task doesn't exist or belongs to different user in delete_task endpoint
+- [X] T098 [US6] Delete task from database and commit in delete_task endpoint
+- [X] T099 [US6] Add logging for successful task deletion in delete_task endpoint
+- [X] T100 [US6] Return {"success": true} response in delete_task endpoint
 
-**Checkpoint**: All user stories complete - full CRUD + completion toggle functionality
+**Checkpoint**: ✅ All user stories complete - full CRUD + completion toggle functionality
 
 ---
 
@@ -259,16 +259,16 @@
 
 **Purpose**: Graceful error handling for database failures
 
-- [ ] T109 [P] Wrap database operations in list_tasks with SQLAlchemyError exception handler in backend/routers/tasks.py
-- [ ] T110 [P] Wrap database operations in create_task with SQLAlchemyError exception handler in backend/routers/tasks.py
-- [ ] T111 [P] Wrap database operations in toggle_task_completion with SQLAlchemyError exception handler in backend/routers/tasks.py
-- [ ] T112 [P] Wrap database operations in update_task with SQLAlchemyError exception handler in backend/routers/tasks.py
-- [ ] T113 [P] Wrap database operations in get_task with SQLAlchemyError exception handler in backend/routers/tasks.py
-- [ ] T114 [P] Wrap database operations in delete_task with SQLAlchemyError exception handler in backend/routers/tasks.py
-- [ ] T115 Log database errors with detailed messages (without exposing to client) in all endpoints
-- [ ] T116 Return HTTPException 500 Internal Server Error for database failures in all endpoints
+- [X] T109 [P] Wrap database operations in list_tasks with SQLAlchemyError exception handler in backend/routers/tasks.py
+- [X] T110 [P] Wrap database operations in create_task with SQLAlchemyError exception handler in backend/routers/tasks.py
+- [X] T111 [P] Wrap database operations in toggle_task_completion with SQLAlchemyError exception handler in backend/routers/tasks.py
+- [X] T112 [P] Wrap database operations in update_task with SQLAlchemyError exception handler in backend/routers/tasks.py
+- [X] T113 [P] Wrap database operations in get_task with SQLAlchemyError exception handler in backend/routers/tasks.py
+- [X] T114 [P] Wrap database operations in delete_task with SQLAlchemyError exception handler in backend/routers/tasks.py
+- [X] T115 Log database errors with detailed messages (without exposing to client) in all endpoints
+- [X] T116 Return HTTPException 500 Internal Server Error for database failures in all endpoints
 
-**Checkpoint**: Application handles database failures gracefully
+**Checkpoint**: ✅ Application handles database failures gracefully
 
 ---
 
@@ -276,16 +276,16 @@
 
 **Purpose**: Final checks and documentation updates
 
-- [ ] T117 Run all tests with pytest and verify 100% pass rate
-- [ ] T118 Test user isolation: create User A and User B tokens, verify complete isolation across all 6 endpoints
-- [ ] T119 Start server with uvicorn and verify health check responds correctly
-- [ ] T120 Verify quickstart.md instructions work end-to-end
-- [ ] T121 Test all 6 endpoints with curl commands from quickstart.md
-- [ ] T122 Verify SQL queries include user_id filter (check logs with echo=True)
-- [ ] T123 Verify all spec success criteria met (SC-001 to SC-008)
-- [ ] T124 Run security audit checklist from research.md
+- [X] T117 Run all tests with pytest and verify 100% pass rate
+- [X] T118 Test user isolation: create User A and User B tokens, verify complete isolation across all 6 endpoints
+- [X] T119 Start server with uvicorn and verify health check responds correctly
+- [X] T120 Verify quickstart.md instructions work end-to-end
+- [X] T121 Test all 6 endpoints with curl commands from quickstart.md
+- [X] T122 Verify SQL queries include user_id filter (check logs with echo=True)
+- [X] T123 Verify all spec success criteria met (SC-001 to SC-008)
+- [X] T124 Run security audit checklist from research.md
 
-**Checkpoint**: Production-ready, all acceptance criteria met
+**Checkpoint**: ✅ Production-ready, all acceptance criteria met
 
 ---
 
