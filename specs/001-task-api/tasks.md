@@ -24,12 +24,12 @@
 
 **Purpose**: Project initialization and dependency configuration
 
-- [ ] T001 Install production dependencies via uv: fastapi, uvicorn[standard], sqlmodel, asyncpg, python-jose[cryptography], python-multipart in backend/pyproject.toml
-- [ ] T002 Install development dependencies via uv: pytest, pytest-asyncio, httpx in backend/pyproject.toml
-- [ ] T003 Create environment variable template in backend/.env.example with DATABASE_URL, BETTER_AUTH_SECRET, FRONTEND_ORIGIN
-- [ ] T004 Verify dependency installation by running uv sync and importing key packages
+- [X] T001 Install production dependencies via uv: fastapi, uvicorn[standard], sqlmodel, asyncpg, python-jose[cryptography], python-multipart in backend/pyproject.toml
+- [X] T002 Install development dependencies via uv: pytest, pytest-asyncio, httpx in backend/pyproject.toml
+- [X] T003 Create environment variable template in backend/.env.example with DATABASE_URL, BETTER_AUTH_SECRET, FRONTEND_ORIGIN
+- [X] T004 Verify dependency installation by running uv sync and importing key packages
 
-**Checkpoint**: Dependencies installed, project configured for development
+**Checkpoint**: ✅ Dependencies installed, project configured for development
 
 ---
 
@@ -39,21 +39,21 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Implement async database connection with create_async_engine in backend/db.py
-- [ ] T006 Implement async session factory with sessionmaker in backend/db.py
-- [ ] T007 Implement get_db dependency function in backend/db.py for FastAPI dependency injection
-- [ ] T008 Create Task SQLModel with user_id index, UUID primary key, title (max 200), description (optional), completed (default false), timestamps in backend/models.py
-- [ ] T009 Create TaskCreate Pydantic schema with title validation (1-200 chars) in backend/schemas.py
-- [ ] T010 Create TaskUpdate Pydantic schema with optional fields in backend/schemas.py
-- [ ] T011 Create TaskRead Pydantic schema excluding user_id in backend/schemas.py
-- [ ] T012 Implement get_current_user dependency with JWT validation (Authorization header + cookie fallback) in backend/dependencies.py
-- [ ] T013 Extract user_id from JWT 'sub' claim in get_current_user dependency in backend/dependencies.py
-- [ ] T014 Raise HTTPException 401 for missing/invalid tokens in get_current_user dependency in backend/dependencies.py
-- [ ] T015 Add logging for authentication failures in get_current_user dependency in backend/dependencies.py
-- [ ] T016 Create tasks router with /api prefix in backend/routers/tasks.py
-- [ ] T017 Create empty __init__.py for routers package in backend/routers/__init__.py
+- [X] T005 Implement async database connection with create_async_engine in backend/db.py
+- [X] T006 Implement async session factory with sessionmaker in backend/db.py
+- [X] T007 Implement get_db dependency function in backend/db.py for FastAPI dependency injection
+- [X] T008 Create Task SQLModel with user_id index, UUID primary key, title (max 200), description (optional), completed (default false), timestamps in backend/models.py
+- [X] T009 Create TaskCreate Pydantic schema with title validation (1-200 chars) in backend/schemas.py
+- [X] T010 Create TaskUpdate Pydantic schema with optional fields in backend/schemas.py
+- [X] T011 Create TaskRead Pydantic schema excluding user_id in backend/schemas.py
+- [X] T012 Implement get_current_user dependency with JWT validation (Authorization header + cookie fallback) in backend/dependencies.py
+- [X] T013 Extract user_id from JWT 'sub' claim in get_current_user dependency in backend/dependencies.py
+- [X] T014 Raise HTTPException 401 for missing/invalid tokens in get_current_user dependency in backend/dependencies.py
+- [X] T015 Add logging for authentication failures in get_current_user dependency in backend/dependencies.py
+- [X] T016 Create tasks router with /api prefix in backend/routers/tasks.py
+- [X] T017 Create empty __init__.py for routers package in backend/routers/__init__.py
 
-**Checkpoint**: Foundation ready - user story implementation can now begin
+**Checkpoint**: ✅ Foundation ready - user story implementation can now begin
 
 ---
 
@@ -67,23 +67,23 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T018 [P] [US1] Write test for GET /api/{user_id}/tasks returns 401 when no token provided in backend/tests/test_auth.py
-- [ ] T019 [P] [US1] Write test for GET /api/{user_id}/tasks returns 403 when path user_id doesn't match token user_id in backend/tests/test_isolation.py
-- [ ] T020 [P] [US1] Write test for User A cannot see User B's tasks via GET endpoint in backend/tests/test_isolation.py
-- [ ] T021 [P] [US1] Write test for GET /api/{user_id}/tasks returns empty list for new user in backend/tests/test_tasks.py
-- [ ] T022 [P] [US1] Write test for GET /api/{user_id}/tasks returns correct task count for authenticated user in backend/tests/test_tasks.py
-- [ ] T023 [US1] Create pytest conftest.py with test client, database, and mock JWT token fixtures in backend/tests/conftest.py
+- [X] T018 [P] [US1] Write test for GET /api/{user_id}/tasks returns 401 when no token provided in backend/tests/test_auth.py
+- [X] T019 [P] [US1] Write test for GET /api/{user_id}/tasks returns 403 when path user_id doesn't match token user_id in backend/tests/test_isolation.py
+- [X] T020 [P] [US1] Write test for User A cannot see User B's tasks via GET endpoint in backend/tests/test_isolation.py
+- [X] T021 [P] [US1] Write test for GET /api/{user_id}/tasks returns empty list for new user in backend/tests/test_tasks.py
+- [X] T022 [P] [US1] Write test for GET /api/{user_id}/tasks returns correct task count for authenticated user in backend/tests/test_tasks.py
+- [X] T023 [US1] Create pytest conftest.py with test client, database, and mock JWT token fixtures in backend/tests/conftest.py
 
 ### Implementation for User Story 1
 
-- [ ] T024 [US1] Implement list_tasks endpoint GET /api/{user_id}/tasks in backend/routers/tasks.py
-- [ ] T025 [US1] Add user_id path parameter validation (verify matches current_user_id) in list_tasks endpoint
-- [ ] T026 [US1] Add HTTPException 403 Forbidden when user_id mismatch in list_tasks endpoint
-- [ ] T027 [US1] Add database query with user_id filter: select(Task).where(Task.user_id == user_id) in list_tasks endpoint
-- [ ] T028 [US1] Add logging for successful task retrieval and authorization failures in list_tasks endpoint
-- [ ] T029 [US1] Return List[TaskRead] response model in list_tasks endpoint
+- [X] T024 [US1] Implement list_tasks endpoint GET /api/{user_id}/tasks in backend/routers/tasks.py
+- [X] T025 [US1] Add user_id path parameter validation (verify matches current_user_id) in list_tasks endpoint
+- [X] T026 [US1] Add HTTPException 403 Forbidden when user_id mismatch in list_tasks endpoint
+- [X] T027 [US1] Add database query with user_id filter: select(Task).where(Task.user_id == user_id) in list_tasks endpoint
+- [X] T028 [US1] Add logging for successful task retrieval and authorization failures in list_tasks endpoint
+- [X] T029 [US1] Return List[TaskRead] response model in list_tasks endpoint
 
-**Checkpoint**: User Story 1 fully functional - users can list their tasks with zero cross-user leaks
+**Checkpoint**: ✅ User Story 1 fully functional - users can list their tasks with zero cross-user leaks
 
 ---
 
@@ -95,25 +95,25 @@
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T030 [P] [US2] Write test for POST /api/{user_id}/tasks returns 401 when no token in backend/tests/test_auth.py
-- [ ] T031 [P] [US2] Write test for POST /api/{user_id}/tasks returns 403 when user_id mismatch in backend/tests/test_isolation.py
-- [ ] T032 [P] [US2] Write test for POST /api/{user_id}/tasks returns 422 when title empty in backend/tests/test_tasks.py
-- [ ] T033 [P] [US2] Write test for POST /api/{user_id}/tasks returns 422 when title exceeds 200 chars in backend/tests/test_tasks.py
-- [ ] T034 [P] [US2] Write test for POST creates task with correct defaults (completed=false, timestamps) in backend/tests/test_tasks.py
-- [ ] T035 [P] [US2] Write test for POST creates task with title and description in backend/tests/test_tasks.py
+- [X] T030 [P] [US2] Write test for POST /api/{user_id}/tasks returns 401 when no token in backend/tests/test_auth.py
+- [X] T031 [P] [US2] Write test for POST /api/{user_id}/tasks returns 403 when user_id mismatch in backend/tests/test_isolation.py
+- [X] T032 [P] [US2] Write test for POST /api/{user_id}/tasks returns 422 when title empty in backend/tests/test_tasks.py
+- [X] T033 [P] [US2] Write test for POST /api/{user_id}/tasks returns 422 when title exceeds 200 chars in backend/tests/test_tasks.py
+- [X] T034 [P] [US2] Write test for POST creates task with correct defaults (completed=false, timestamps) in backend/tests/test_tasks.py
+- [X] T035 [P] [US2] Write test for POST creates task with title and description in backend/tests/test_tasks.py
 
 ### Implementation for User Story 2
 
-- [ ] T036 [US2] Implement create_task endpoint POST /api/{user_id}/tasks with 201 status in backend/routers/tasks.py
-- [ ] T037 [US2] Add user_id path parameter validation (verify matches current_user_id) in create_task endpoint
-- [ ] T038 [US2] Add HTTPException 403 Forbidden when user_id mismatch in create_task endpoint
-- [ ] T039 [US2] Create Task instance with authenticated user_id (NOT from path param) in create_task endpoint
-- [ ] T040 [US2] Set task title and description from TaskCreate schema in create_task endpoint
-- [ ] T041 [US2] Add task to database session, commit, and refresh in create_task endpoint
-- [ ] T042 [US2] Add logging for successful task creation in create_task endpoint
-- [ ] T043 [US2] Return TaskRead response model in create_task endpoint
+- [X] T036 [US2] Implement create_task endpoint POST /api/{user_id}/tasks with 201 status in backend/routers/tasks.py
+- [X] T037 [US2] Add user_id path parameter validation (verify matches current_user_id) in create_task endpoint
+- [X] T038 [US2] Add HTTPException 403 Forbidden when user_id mismatch in create_task endpoint
+- [X] T039 [US2] Create Task instance with authenticated user_id (NOT from path param) in create_task endpoint
+- [X] T040 [US2] Set task title and description from TaskCreate schema in create_task endpoint
+- [X] T041 [US2] Add task to database session, commit, and refresh in create_task endpoint
+- [X] T042 [US2] Add logging for successful task creation in create_task endpoint
+- [X] T043 [US2] Return TaskRead response model in create_task endpoint
 
-**Checkpoint**: User Stories 1 AND 2 complete - users can list and create tasks (MVP achieved!)
+**Checkpoint**: ✅ User Stories 1 AND 2 complete - users can list and create tasks (MVP achieved!)
 
 ---
 
@@ -242,16 +242,16 @@
 
 **Purpose**: Wire all components together and add cross-cutting concerns
 
-- [ ] T101 Create FastAPI app instance with title and description in backend/main.py
-- [ ] T102 Configure CORS middleware with FRONTEND_ORIGIN environment variable in backend/main.py
-- [ ] T103 Set CORS allow_credentials=true for httpOnly cookies in backend/main.py
-- [ ] T104 Set CORS allow_methods to include GET, POST, PUT, DELETE, PATCH in backend/main.py
-- [ ] T105 Include tasks router in FastAPI app in backend/main.py
-- [ ] T106 Add startup event to create database tables with SQLModel.metadata.create_all in backend/main.py
-- [ ] T107 Add health check endpoint GET /health returning status and service name in backend/main.py
-- [ ] T108 Configure logging with basicConfig (INFO level, structured format) in backend/main.py
+- [X] T101 Create FastAPI app instance with title and description in backend/main.py
+- [X] T102 Configure CORS middleware with FRONTEND_ORIGIN environment variable in backend/main.py
+- [X] T103 Set CORS allow_credentials=true for httpOnly cookies in backend/main.py
+- [X] T104 Set CORS allow_methods to include GET, POST, PUT, DELETE, PATCH in backend/main.py
+- [X] T105 Include tasks router in FastAPI app in backend/main.py
+- [X] T106 Add startup event to create database tables with SQLModel.metadata.create_all in backend/main.py
+- [X] T107 Add health check endpoint GET /health returning status and service name in backend/main.py
+- [X] T108 Configure logging with basicConfig (INFO level, structured format) in backend/main.py
 
-**Checkpoint**: Application fully integrated and runnable
+**Checkpoint**: ✅ Application fully integrated and runnable
 
 ---
 
