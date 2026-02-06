@@ -63,7 +63,7 @@ export function LoginForm() {
 
       toast.success("Login successful!");
       router.push("/tasks");
-    } catch (error) {
+    } catch {
       toast.error("An error occurred. Please try again.");
       setLoading(false);
     }

@@ -64,7 +64,7 @@ export function EditTaskDialog({
         <DialogHeader>
           <DialogTitle>Edit Task</DialogTitle>
           <DialogDescription>
-            Update the task title and description. Click save when you're done.
+            Update the task title and description. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
