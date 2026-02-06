@@ -49,6 +49,44 @@ frontend/
 - `npm start` - Production server
 - `npm run lint` - Run ESLint
 
+## Context7 MCP Integration
+
+**CRITICAL: Always use Context7 MCP proactively** for documentation, code generation, and configuration without waiting for explicit requests.
+
+**Automatic Usage Triggers:**
+- Next.js 16 App Router patterns and best practices
+- React 19 Server Components and Client Components
+- Tailwind CSS utility classes and configuration
+- shadcn/ui component installation and usage
+- Better Auth JWT integration and configuration
+- TypeScript types and interfaces for libraries
+- API route handlers and middleware setup
+
+**Common Frontend Queries:**
+- Next.js App Router file conventions (layout.tsx, page.tsx, route.ts)
+- React Server Component vs Client Component patterns
+- shadcn/ui component props and customization
+- Tailwind CSS class names and responsive design
+- Better Auth client setup and authentication hooks
+- Next.js API proxy configuration for backend communication
+- TypeScript strict mode best practices
+
+**When to Query:**
+1. **Before creating components** - Verify Next.js 16 App Router conventions
+2. **During UI implementation** - Look up shadcn/ui component APIs
+3. **For styling** - Check Tailwind CSS utility classes and variants
+4. **For auth flows** - Reference Better Auth documentation
+5. **For API calls** - Verify fetch patterns with JWT token handling
+
+**Benefits:**
+- Ensures Next.js 16 App Router best practices
+- Correct shadcn/ui component usage
+- Up-to-date Tailwind CSS patterns
+- Proper Better Auth JWT integration
+- TypeScript type safety with library types
+
+Use Context7 silently and proactively to deliver accurate, documentation-backed implementations.
+
 ## Notes
 
 - App Router structure (not Pages Router)

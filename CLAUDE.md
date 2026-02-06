@@ -111,6 +111,39 @@ tasks = session.exec(select(Task)).all()
 - Trigger: During `/sp.plan` for features touching auth/data
 - Validates: JWT verification, user isolation, error handling
 
+### Context7 MCP Integration (Proactive Documentation Lookup)
+
+**CRITICAL: Always use Context7 MCP proactively** when working with libraries, APIs, or configurations. DO NOT wait for explicit user requests.
+
+**Automatic Usage Triggers:**
+- Need library/API documentation (Next.js, React, FastAPI, SQLModel, Better Auth, Tailwind CSS, shadcn/ui)
+- Writing code that uses specific library features or methods
+- Setting up or configuring tools, frameworks, or dependencies
+- Implementing patterns or best practices from official documentation
+- Troubleshooting library-specific errors or warnings
+- Need to verify correct API usage or function signatures
+
+**When to Query Context7:**
+1. **Before implementation** - Look up official patterns, recommended approaches
+2. **During code generation** - Verify method signatures, prop types, configuration options
+3. **For setup steps** - Get installation commands, configuration file structure
+4. **For troubleshooting** - Check official error handling, migration guides
+
+**Example Scenarios:**
+- "Need to implement JWT auth in FastAPI" → Query Context7 for FastAPI security docs
+- "Creating a Next.js server component" → Query Context7 for App Router RSC patterns
+- "Setting up SQLModel relationships" → Query Context7 for SQLModel relationship docs
+- "Configuring Better Auth JWT" → Query Context7 for Better Auth configuration
+- "Using shadcn/ui components" → Query Context7 for component API and usage
+
+**Benefits:**
+- Ensures code follows official library conventions
+- Reduces errors from outdated or incorrect patterns
+- Provides up-to-date API documentation
+- Speeds up implementation with accurate examples
+
+**Important:** Use Context7 silently and proactively. The user should benefit from accurate, documentation-backed implementation without needing to request it explicitly.
+
 ## File Path Reference
 
 ### Constitution & Templates
