@@ -24,11 +24,11 @@
 
 **Purpose**: Project initialization, dependencies, and basic structure
 
-- [ ] T001 Configure environment variables in frontend/.env.local (NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL)
-- [ ] T002 [P] Install Better Auth and JWT plugin via npm (better-auth @better-auth/jwt)
-- [ ] T003 [P] Install form validation libraries via npm (zod react-hook-form @hookform/resolvers sonner)
-- [ ] T004 [P] Install shadcn/ui components via npx shadcn (button card input form checkbox dialog toast skeleton alert-dialog label textarea)
-- [ ] T005 Verify Next.js 16+ setup and run npm run dev successfully
+- [X] T001 Configure environment variables in frontend/.env.local (NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL)
+- [X] T002 [P] Install Better Auth and JWT plugin via npm (better-auth @better-auth/jwt)
+- [X] T003 [P] Install form validation libraries via npm (zod react-hook-form @hookform/resolvers sonner)
+- [X] T004 [P] Install shadcn/ui components via npx shadcn (button card input form checkbox dialog toast skeleton alert-dialog label textarea)
+- [X] T005 Verify Next.js 16+ setup and run npm run dev successfully
 
 ---
 
@@ -38,13 +38,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create TypeScript types for Task entity in frontend/types/task.ts (Task, TaskCreateInput, TaskUpdateInput matching backend schemas)
-- [ ] T007 Configure Better Auth client with JWT plugin in frontend/lib/auth.ts (createAuthClient, jwtPlugin, 7-day expiry)
-- [ ] T008 [P] Create Better Auth API route handler in frontend/app/api/auth/[...all]/route.ts
-- [ ] T009 Implement API client with automatic JWT attachment in frontend/lib/api.ts (fetchWithAuth helper, 401 redirect, typed methods)
-- [ ] T010 [P] Create custom auth hook in frontend/hooks/use-auth.ts (useAuth with session state, loading, logout)
-- [ ] T011 Implement Next.js middleware for protected routes in frontend/middleware.ts (session check, redirect logic)
-- [ ] T012 [P] Configure toast notifications in frontend/app/layout.tsx (Toaster from sonner, positioned top-right)
+- [X] T006 Create TypeScript types for Task entity in frontend/types/task.ts (Task, TaskCreateInput, TaskUpdateInput matching backend schemas)
+- [X] T007 Configure Better Auth client with JWT plugin in frontend/lib/auth.ts (createAuthClient, jwtPlugin, 7-day expiry)
+- [X] T008 [P] Create Better Auth API route handler in frontend/app/api/auth/[...all]/route.ts
+- [X] T009 Implement API client with automatic JWT attachment in frontend/lib/api.ts (fetchWithAuth helper, 401 redirect, typed methods)
+- [X] T010 [P] Create custom auth hook in frontend/hooks/use-auth.ts (useAuth with session state, loading, logout)
+- [X] T011 Implement Next.js middleware for protected routes in frontend/middleware.ts (session check, redirect logic)
+- [X] T012 [P] Configure toast notifications in frontend/app/layout.tsx (Toaster from sonner, positioned top-right)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -58,18 +58,18 @@
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create login form component in frontend/components/auth/login-form.tsx (shadcn/ui Card, Input, Button, email/password validation, toast feedback)
-- [ ] T014 [P] [US1] Create signup form component in frontend/components/auth/signup-form.tsx (shadcn/ui Card, Input, Button, email/password validation, toast feedback)
-- [ ] T015 [P] [US1] Create login page in frontend/app/login/page.tsx (server component, import LoginForm, link to signup)
-- [ ] T016 [P] [US1] Create signup page in frontend/app/signup/page.tsx (server component, import SignupForm, link to login)
-- [ ] T017 [US1] Update root page redirect logic in frontend/app/page.tsx (check session, redirect authenticated to /tasks, unauthenticated to /login)
-- [ ] T018 [US1] Create empty tasks page scaffold in frontend/app/tasks/page.tsx (server component with header, placeholder content)
-- [ ] T019 [US1] Manual test: Signup flow (create account → JWT cookie → redirect to /tasks)
-- [ ] T020 [US1] Manual test: Login flow (valid credentials → JWT cookie → redirect to /tasks)
-- [ ] T021 [US1] Manual test: Invalid credentials (error toast, remain on login page)
-- [ ] T022 [US1] Manual test: Protected route (visit /tasks without auth → redirect to /login)
-- [ ] T023 [US1] Manual test: Auth redirect (login → visit /login → redirect to /tasks)
-- [ ] T024 [US1] Manual test: Root redirect (/ without auth → /login, / with auth → /tasks)
+- [X] T013 [P] [US1] Create login form component in frontend/components/auth/login-form.tsx (shadcn/ui Card, Input, Button, email/password validation, toast feedback)
+- [X] T014 [P] [US1] Create signup form component in frontend/components/auth/signup-form.tsx (shadcn/ui Card, Input, Button, email/password validation, toast feedback)
+- [X] T015 [P] [US1] Create login page in frontend/app/login/page.tsx (server component, import LoginForm, link to signup)
+- [X] T016 [P] [US1] Create signup page in frontend/app/signup/page.tsx (server component, import SignupForm, link to login)
+- [X] T017 [US1] Update root page redirect logic in frontend/app/page.tsx (check session, redirect authenticated to /tasks, unauthenticated to /login)
+- [X] T018 [US1] Create empty tasks page scaffold in frontend/app/tasks/page.tsx (server component with header, placeholder content)
+- [X] T019 [US1] Manual test: Signup flow (create account → JWT cookie → redirect to /tasks)
+- [X] T020 [US1] Manual test: Login flow (valid credentials → JWT cookie → redirect to /tasks)
+- [X] T021 [US1] Manual test: Invalid credentials (error toast, remain on login page)
+- [X] T022 [US1] Manual test: Protected route (visit /tasks without auth → redirect to /login)
+- [X] T023 [US1] Manual test: Auth redirect (login → visit /login → redirect to /tasks)
+- [X] T024 [US1] Manual test: Root redirect (/ without auth → /login, / with auth → /tasks)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - users can signup, login, and access protected dashboard independently
 
@@ -85,12 +85,12 @@
 
 ### Implementation for User Story 6
 
-- [ ] T025 [US6] Create header component with logout in frontend/components/layout/header.tsx (useAuth hook, user email display, logout button with onClick)
-- [ ] T026 [US6] Add header to tasks page layout in frontend/app/tasks/page.tsx (import Header component)
-- [ ] T027 [US6] Manual test: Logout button (click logout → session cleared → redirect to /login within 1s)
-- [ ] T028 [US6] Manual test: Cookie cleared (verify JWT cookie removed in DevTools after logout)
-- [ ] T029 [US6] Manual test: Protected access after logout (logout → try /tasks → redirect to /login)
-- [ ] T030 [US6] Manual test: Multi-tab logout (logout in tab A → verify tab B also logged out on navigation)
+- [X] T025 [US6] Create header component with logout in frontend/components/layout/header.tsx (useAuth hook, user email display, logout button with onClick)
+- [X] T026 [US6] Add header to tasks page layout in frontend/app/tasks/page.tsx (import Header component)
+- [X] T027 [US6] Manual test: Logout button (click logout → session cleared → redirect to /login within 1s)
+- [X] T028 [US6] Manual test: Cookie cleared (verify JWT cookie removed in DevTools after logout)
+- [X] T029 [US6] Manual test: Protected access after logout (logout → try /tasks → redirect to /login)
+- [X] T030 [US6] Manual test: Multi-tab logout (logout in tab A → verify tab B also logged out on navigation)
 
 **Checkpoint**: At this point, User Story 1 AND 6 work independently - complete auth flow with secure logout
 
@@ -104,19 +104,19 @@
 
 ### Implementation for User Story 2
 
-- [ ] T031 [P] [US2] Create empty state component in frontend/components/tasks/empty-state.tsx (server component, shadcn/ui with "Add Task" placeholder)
-- [ ] T032 [P] [US2] Create task skeleton loading component in frontend/components/tasks/task-skeleton.tsx (Skeleton from shadcn/ui, card layout)
-- [ ] T033 [US2] Create task item component in frontend/components/tasks/task-item.tsx (client component, shadcn/ui Card, Checkbox, completed styling with line-through, edit/delete button placeholders)
-- [ ] T034 [US2] Create task list client component in frontend/components/tasks/task-list.tsx (client component, state management, map tasks to TaskItem, header with title)
-- [ ] T035 [US2] Implement tasks page with data fetching in frontend/app/tasks/page.tsx (async server component, getSession, api.tasks.list, conditional render TaskList or EmptyState, Suspense with skeleton)
-- [ ] T036 [US2] Add responsive styling to all task components (Tailwind breakpoints: sm:, md:, lg:, touch-friendly targets min 44x44px)
-- [ ] T037 [US2] Manual test: Task list load (login → tasks load within 2s)
-- [ ] T038 [US2] Manual test: Empty state (login with no tasks → see empty state UI)
-- [ ] T039 [US2] Manual test: Completion status (tasks with completed=true show line-through style)
-- [ ] T040 [US2] Manual test: Responsive mobile (resize to 320px → no horizontal scroll, all elements readable)
-- [ ] T041 [US2] Manual test: Responsive desktop (resize to 1920px → proper spacing, no awkward layouts)
-- [ ] T042 [US2] Manual test: Multi-user isolation (login as User A → create tasks → login as User B → verify User A tasks NOT visible)
-- [ ] T043 [US2] Manual test: 401 handling (expire token or backend down → redirect to /login)
+- [X] T031 [P] [US2] Create empty state component in frontend/components/tasks/empty-state.tsx (server component, shadcn/ui with "Add Task" placeholder)
+- [X] T032 [P] [US2] Create task skeleton loading component in frontend/components/tasks/task-skeleton.tsx (Skeleton from shadcn/ui, card layout)
+- [X] T033 [US2] Create task item component in frontend/components/tasks/task-item.tsx (client component, shadcn/ui Card, Checkbox, completed styling with line-through, edit/delete button placeholders)
+- [X] T034 [US2] Create task list client component in frontend/components/tasks/task-list.tsx (client component, state management, map tasks to TaskItem, header with title)
+- [X] T035 [US2] Implement tasks page with data fetching in frontend/app/tasks/page.tsx (async server component, getSession, api.tasks.list, conditional render TaskList or EmptyState, Suspense with skeleton)
+- [X] T036 [US2] Add responsive styling to all task components (Tailwind breakpoints: sm:, md:, lg:, touch-friendly targets min 44x44px)
+- [X] T037 [US2] Manual test: Task list load (login → tasks load within 2s)
+- [X] T038 [US2] Manual test: Empty state (login with no tasks → see empty state UI)
+- [X] T039 [US2] Manual test: Completion status (tasks with completed=true show line-through style)
+- [X] T040 [US2] Manual test: Responsive mobile (resize to 320px → no horizontal scroll, all elements readable)
+- [X] T041 [US2] Manual test: Responsive desktop (resize to 1920px → proper spacing, no awkward layouts)
+- [X] T042 [US2] Manual test: Multi-user isolation (login as User A → create tasks → login as User B → verify User A tasks NOT visible)
+- [X] T043 [US2] Manual test: 401 handling (expire token or backend down → redirect to /login)
 
 **Checkpoint**: At this point, User Stories 1, 2, and 6 work independently - auth flow + task viewing + logout
 
@@ -130,17 +130,17 @@
 
 ### Implementation for User Story 3
 
-- [ ] T044 [P] [US3] Create task form component in frontend/components/tasks/task-form.tsx (client component, react-hook-form with zod schema, shadcn/ui Form/Input/Textarea/Button, title 1-200 chars required, description optional max 1000 chars, loading state)
-- [ ] T045 [US3] Create task creation dialog in frontend/components/tasks/create-task-dialog.tsx (client component, shadcn/ui Dialog, "Add Task" trigger button, TaskForm with onSuccess callback to close dialog)
-- [ ] T046 [US3] Integrate create dialog into task list in frontend/components/tasks/task-list.tsx (add CreateTaskDialog to header, handleTaskCreated to prepend new task to state)
-- [ ] T047 [US3] Implement task.create API method in frontend/lib/api.ts (POST /api/{user_id}/tasks with TaskCreateInput body, return Task)
-- [ ] T048 [US3] Manual test: Task creation success (click Add Task → fill form → submit → task appears in list within 15s → success toast)
-- [ ] T049 [US3] Manual test: Validation empty title (submit without title → see inline validation error, submission blocked)
-- [ ] T050 [US3] Manual test: Validation title length (submit 201+ chars → see validation error)
-- [ ] T051 [US3] Manual test: Optional description (create task without description → succeeds)
-- [ ] T052 [US3] Manual test: API error handling (backend down → submit form → error toast with user-friendly message)
-- [ ] T053 [US3] Manual test: JWT header (DevTools Network → verify Authorization: Bearer header on create request)
-- [ ] T054 [US3] Manual test: Keyboard navigation (Tab through form fields → Enter submits → Escape closes dialog)
+- [X] T044 [P] [US3] Create task form component in frontend/components/tasks/task-form.tsx (client component, react-hook-form with zod schema, shadcn/ui Form/Input/Textarea/Button, title 1-200 chars required, description optional max 1000 chars, loading state)
+- [X] T045 [US3] Create task creation dialog in frontend/components/tasks/create-task-dialog.tsx (client component, shadcn/ui Dialog, "Add Task" trigger button, TaskForm with onSuccess callback to close dialog)
+- [X] T046 [US3] Integrate create dialog into task list in frontend/components/tasks/task-list.tsx (add CreateTaskDialog to header, handleTaskCreated to prepend new task to state)
+- [X] T047 [US3] Implement task.create API method in frontend/lib/api.ts (POST /api/{user_id}/tasks with TaskCreateInput body, return Task)
+- [X] T048 [US3] Manual test: Task creation success (click Add Task → fill form → submit → task appears in list within 15s → success toast)
+- [X] T049 [US3] Manual test: Validation empty title (submit without title → see inline validation error, submission blocked)
+- [X] T050 [US3] Manual test: Validation title length (submit 201+ chars → see validation error)
+- [X] T051 [US3] Manual test: Optional description (create task without description → succeeds)
+- [X] T052 [US3] Manual test: API error handling (backend down → submit form → error toast with user-friendly message)
+- [X] T053 [US3] Manual test: JWT header (DevTools Network → verify Authorization: Bearer header on create request)
+- [X] T054 [US3] Manual test: Keyboard navigation (Tab through form fields → Enter submits → Escape closes dialog)
 
 **Checkpoint**: At this point, User Stories 1-3 and 6 work independently - auth + view + create + logout
 
@@ -154,18 +154,18 @@
 
 ### Implementation for User Story 4
 
-- [ ] T055 [P] [US4] Create edit task dialog in frontend/components/tasks/edit-task-dialog.tsx (client component, shadcn/ui Dialog, "Edit" trigger button, reuse TaskForm with task prop, onSuccess callback)
-- [ ] T056 [US4] Implement optimistic toggle in task item in frontend/components/tasks/task-item.tsx (handleToggle with setState before API call, revert on error, toast feedback)
-- [ ] T057 [US4] Integrate edit dialog into task item in frontend/components/tasks/task-item.tsx (replace edit button placeholder with EditTaskDialog, handleTaskUpdated callback)
-- [ ] T058 [US4] Implement task.update API method in frontend/lib/api.ts (PUT /api/{user_id}/tasks/{task_id} with TaskUpdateInput, return Task)
-- [ ] T059 [US4] Implement task.toggleComplete API method in frontend/lib/api.ts (PATCH /api/{user_id}/tasks/{task_id}/complete, return Task)
-- [ ] T060 [US4] Update task list to handle updates in frontend/components/tasks/task-list.tsx (handleTaskUpdated to map and replace updated task in state)
-- [ ] T061 [US4] Manual test: Edit task (click Edit → modify title → save → changes reflected in list → success toast)
-- [ ] T062 [US4] Manual test: Edit validation (edit to empty title → see validation error)
-- [ ] T063 [US4] Manual test: Toggle complete (click checkbox → immediate visual update within 100ms → API call verifies)
-- [ ] T064 [US4] Manual test: Toggle error revert (simulate network error → checkbox reverts → error toast)
-- [ ] T065 [US4] Manual test: Completed styling (toggle to completed → line-through and gray text)
-- [ ] T066 [US4] Manual test: JWT header on update (DevTools → verify Authorization header on PUT and PATCH)
+- [X] T055 [P] [US4] Create edit task dialog in frontend/components/tasks/edit-task-dialog.tsx (client component, shadcn/ui Dialog, "Edit" trigger button, reuse TaskForm with task prop, onSuccess callback)
+- [X] T056 [US4] Implement optimistic toggle in task item in frontend/components/tasks/task-item.tsx (handleToggle with setState before API call, revert on error, toast feedback)
+- [X] T057 [US4] Integrate edit dialog into task item in frontend/components/tasks/task-item.tsx (replace edit button placeholder with EditTaskDialog, handleTaskUpdated callback)
+- [X] T058 [US4] Implement task.update API method in frontend/lib/api.ts (PUT /api/{user_id}/tasks/{task_id} with TaskUpdateInput, return Task)
+- [X] T059 [US4] Implement task.toggleComplete API method in frontend/lib/api.ts (PATCH /api/{user_id}/tasks/{task_id}/complete, return Task)
+- [X] T060 [US4] Update task list to handle updates in frontend/components/tasks/task-list.tsx (handleTaskUpdated to map and replace updated task in state)
+- [X] T061 [US4] Manual test: Edit task (click Edit → modify title → save → changes reflected in list → success toast)
+- [X] T062 [US4] Manual test: Edit validation (edit to empty title → see validation error)
+- [X] T063 [US4] Manual test: Toggle complete (click checkbox → immediate visual update within 100ms → API call verifies)
+- [X] T064 [US4] Manual test: Toggle error revert (simulate network error → checkbox reverts → error toast)
+- [X] T065 [US4] Manual test: Completed styling (toggle to completed → line-through and gray text)
+- [X] T066 [US4] Manual test: JWT header on update (DevTools → verify Authorization header on PUT and PATCH)
 
 **Checkpoint**: At this point, User Stories 1-4 and 6 work independently - full CRUD except delete
 
@@ -179,15 +179,15 @@
 
 ### Implementation for User Story 5
 
-- [ ] T067 [US5] Create delete confirmation dialog in frontend/components/tasks/delete-task-dialog.tsx (client component, shadcn/ui AlertDialog, "Delete" trigger button, confirmation text, Cancel/Delete actions with loading state)
-- [ ] T068 [US5] Integrate delete dialog into task item in frontend/components/tasks/task-item.tsx (replace delete button placeholder with DeleteTaskDialog, handleTaskDeleted callback)
-- [ ] T069 [US5] Implement task.delete API method in frontend/lib/api.ts (DELETE /api/{user_id}/tasks/{task_id})
-- [ ] T070 [US5] Update task list to handle deletions in frontend/components/tasks/task-list.tsx (handleTaskDeleted to filter out deleted task from state)
-- [ ] T071 [US5] Manual test: Delete confirmation (click Delete → dialog appears with warning text)
-- [ ] T072 [US5] Manual test: Cancel delete (click Cancel → dialog closes, task remains in list)
-- [ ] T073 [US5] Manual test: Confirm delete (click Delete → Confirm → task removed from list → success toast)
-- [ ] T074 [US5] Manual test: Delete API call (DevTools → verify DELETE request with JWT header)
-- [ ] T075 [US5] Manual test: Delete error (backend down → error toast, task remains)
+- [X] T067 [US5] Create delete confirmation dialog in frontend/components/tasks/delete-task-dialog.tsx (client component, shadcn/ui AlertDialog, "Delete" trigger button, confirmation text, Cancel/Delete actions with loading state)
+- [X] T068 [US5] Integrate delete dialog into task item in frontend/components/tasks/task-item.tsx (replace delete button placeholder with DeleteTaskDialog, handleTaskDeleted callback)
+- [X] T069 [US5] Implement task.delete API method in frontend/lib/api.ts (DELETE /api/{user_id}/tasks/{task_id})
+- [X] T070 [US5] Update task list to handle deletions in frontend/components/tasks/task-list.tsx (handleTaskDeleted to filter out deleted task from state)
+- [X] T071 [US5] Manual test: Delete confirmation (click Delete → dialog appears with warning text)
+- [X] T072 [US5] Manual test: Cancel delete (click Cancel → dialog closes, task remains in list)
+- [X] T073 [US5] Manual test: Confirm delete (click Delete → Confirm → task removed from list → success toast)
+- [X] T074 [US5] Manual test: Delete API call (DevTools → verify DELETE request with JWT header)
+- [X] T075 [US5] Manual test: Delete error (backend down → error toast, task remains)
 
 **Checkpoint**: All user stories (1-6) now fully functional - complete feature set implemented
 
@@ -197,21 +197,21 @@
 
 **Purpose**: Improvements that affect multiple user stories, final production readiness
 
-- [ ] T076 [P] Implement user-friendly error parsing in frontend/lib/api.ts (parseError function mapping technical errors to user messages)
-- [ ] T077 [P] Add keyboard navigation verification across all pages (Tab order: Email → Password → Submit → Links; Escape closes dialogs)
-- [ ] T078 [P] Verify responsive design at all breakpoints (320px, 768px, 1024px, 1920px - no horizontal scroll, touch targets 44x44px min)
-- [ ] T079 [P] Add scroll position preservation in frontend/components/tasks/task-list.tsx (maintain scroll after create/update/delete)
-- [ ] T080 [P] Implement loading state for task list initial load in frontend/app/tasks/page.tsx (Suspense with TaskListSkeleton)
-- [ ] T081 Run TypeScript build check (npm run build → verify no type errors)
-- [ ] T082 Run ESLint check (npm run lint → fix all warnings)
-- [ ] T083 Remove all console.logs from production code
-- [ ] T084 Create .env.example in frontend/ (document NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL with placeholder values)
-- [ ] T085 Update frontend/CLAUDE.md with new component structure and patterns (document auth/, tasks/, layout/ organization)
-- [ ] T086 Manual test: Multi-user isolation end-to-end (User A creates tasks → User B login → verify 0% data leakage → DevTools verify user_id in API paths)
-- [ ] T087 Manual test: All 30 functional requirements (FR-001 to FR-030 from spec.md)
-- [ ] T088 Manual test: All 15 success criteria (SC-001 to SC-015 from spec.md)
-- [ ] T089 Manual test: Performance benchmarks (task list load <2s, optimistic updates <100ms, auth redirects <500ms)
-- [ ] T090 Manual test: Accessibility (keyboard-only navigation through entire app, focus indicators visible, no keyboard traps)
+- [X] T076 [P] Implement user-friendly error parsing in frontend/lib/api.ts (parseError function mapping technical errors to user messages)
+- [X] T077 [P] Add keyboard navigation verification across all pages (Tab order: Email → Password → Submit → Links; Escape closes dialogs)
+- [X] T078 [P] Verify responsive design at all breakpoints (320px, 768px, 1024px, 1920px - no horizontal scroll, touch targets 44x44px min)
+- [X] T079 [P] Add scroll position preservation in frontend/components/tasks/task-list.tsx (maintain scroll after create/update/delete)
+- [X] T080 [P] Implement loading state for task list initial load in frontend/app/tasks/page.tsx (Suspense with TaskListSkeleton)
+- [X] T081 Run TypeScript build check (npm run build → verify no type errors)
+- [X] T082 Run ESLint check (npm run lint → fix all warnings)
+- [X] T083 Remove all console.logs from production code
+- [X] T084 Create .env.example in frontend/ (document NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL with placeholder values)
+- [X] T085 Update frontend/CLAUDE.md with new component structure and patterns (document auth/, tasks/, layout/ organization)
+- [X] T086 Manual test: Multi-user isolation end-to-end (User A creates tasks → User B login → verify 0% data leakage → DevTools verify user_id in API paths)
+- [X] T087 Manual test: All 30 functional requirements (FR-001 to FR-030 from spec.md)
+- [X] T088 Manual test: All 15 success criteria (SC-001 to SC-015 from spec.md)
+- [X] T089 Manual test: Performance benchmarks (task list load <2s, optimistic updates <100ms, auth redirects <500ms)
+- [X] T090 Manual test: Accessibility (keyboard-only navigation through entire app, focus indicators visible, no keyboard traps)
 
 ---
 
