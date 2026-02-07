@@ -16,12 +16,11 @@
 
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/simple-auth";
+import { getSession } from "@/lib/auth-actions";
 import { taskApi } from "@/lib/api";
 import { Header } from "@/components/layout/header";
-import { TaskList } from "@/components/tasks/task-list";
-import { EmptyState } from "@/components/tasks/empty-state";
 import { TaskListSkeleton } from "@/components/tasks/task-list-skeleton";
+import { TasksPageClient } from "@/components/tasks/tasks-page-client";
 
 async function TasksContent({ userId }: { userId: string }) {
   // Fetch tasks from backend API
@@ -33,13 +32,8 @@ async function TasksContent({ userId }: { userId: string }) {
     tasks = [];
   }
 
-  // Show empty state if no tasks
-  if (tasks.length === 0) {
-    return <EmptyState />;
-  }
-
-  // Display task list
-  return <TaskList initialTasks={tasks} userId={userId} />;
+  // Use client wrapper that handles both empty and populated states
+  return <TasksPageClient initialTasks={tasks} userId={userId} />;
 }
 
 export default async function TasksPage() {

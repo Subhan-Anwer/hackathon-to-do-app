@@ -21,8 +21,10 @@ backend/
 ├── pyproject.toml      # Project configuration with all dependencies
 ├── uv.lock             # Dependency lock file
 ├── .env.example        # Environment variable template
-├── DEVELOPMENT.md      # Comprehensive development guide (640 lines)
-├── QUICKSTART.md       # Quick reference guide (245 lines)
+├── docs/               # Documentation files
+│   ├── DEVELOPMENT.md  # Comprehensive development guide (640 lines)
+│   ├── QUICKSTART.md   # Quick reference guide (245 lines)
+│   └── README.md       # Backend overview and setup instructions
 └── CLAUDE.md           # This file - backend structure guide
 ```
 
@@ -167,7 +169,7 @@ uv run uvicorn main:app --reload
 - ✅ Comprehensive error handling with database exception wrapping
 - ✅ CORS middleware configured for Next.js frontend
 - ✅ 34 passing tests (auth, isolation, CRUD functionality)
-- ✅ Complete documentation (DEVELOPMENT.md, QUICKSTART.md)
+- ✅ Complete documentation (docs/DEVELOPMENT.md, docs/QUICKSTART.md)
 
 **Architecture Highlights:**
 - Triple-layer security: JWT validation → user_id verification → DB filtering
@@ -202,6 +204,7 @@ uv run pytest tests/ -v  # All 34 tests should pass
 ```
 
 **Documentation:**
-- See `DEVELOPMENT.md` for comprehensive development guide
-- See `QUICKSTART.md` for quick reference and curl examples
+- See `docs/DEVELOPMENT.md` for comprehensive development guide
+- See `docs/QUICKSTART.md` for quick reference and curl examples
+- See `docs/README.md` for backend overview and setup instructions
 - See `specs/001-task-api/` for complete specification and design documents

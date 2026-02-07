@@ -11,7 +11,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSession, signout } from "@/lib/simple-auth";
+import { getSession, signout } from "@/lib/auth-actions";
 
 interface AuthUser {
   userId: string;

@@ -11,7 +11,7 @@
  */
 
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/simple-auth";
+import { getSession } from "@/lib/auth-actions";
 
 export default async function HomePage() {
   const session = await getSession();

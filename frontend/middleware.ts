@@ -1,63 +1,18 @@
 /**
- * Next.js Middleware for Protected Routes
+ * Next.js Middleware - DISABLED
  *
- * Handles authentication checks and redirects based on session state.
- * Runs on all routes except static files and API routes.
+ * Authentication is handled by server components (app/page.tsx, app/tasks/page.tsx)
+ * using Better Auth's getSession(). Middleware is not needed and was causing
+ * redirect loops due to cookie name mismatches.
  *
- * Reference: specs/002-frontend-auth/spec.md (FR-006, FR-007)
+ * Better Auth uses its own cookie management with the nextCookies() plugin.
  */
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtVerify } from "jose";
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.BETTER_AUTH_SECRET || "fallback-secret"
-);
-const COOKIE_NAME = "session";
-
-/**
- * Check if user has valid session
- */
-async function hasValidSession(request: NextRequest): Promise<boolean> {
-  const token = request.cookies.get(COOKIE_NAME)?.value;
-
-  if (!token) {
-    return false;
-  }
-
-  try {
-    await jwtVerify(token, JWT_SECRET);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const isAuthenticated = await hasValidSession(request);
-
-  // Public routes (accessible without auth)
-  const publicRoutes = ["/login", "/signup"];
-  const isPublicRoute = publicRoutes.includes(pathname);
-
-  // Protected routes (require auth)
-  const protectedRoutes = ["/tasks"];
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  // Redirect unauthenticated users from protected routes to login
-  if (isProtectedRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // Redirect authenticated users from auth pages to tasks
-  if (isPublicRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL("/tasks", request.url));
-  }
-
+  // Let all requests through - auth is handled by server components
   return NextResponse.next();
 }
 
@@ -69,6 +24,7 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
+     * - api routes (Better Auth uses /api/auth/*)
      */
     "/((?!_next/static|_next/image|favicon.ico|.*\\..*|api).*)",
   ],

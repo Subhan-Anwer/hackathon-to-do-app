@@ -39,12 +39,8 @@ export function EmptyState() {
           No tasks yet
         </h3>
 
-        <p className="text-slate-600 text-center max-w-sm mb-6">
+        <p className="text-slate-600 text-center max-w-sm">
           Get started by creating your first task. Stay organized and track your progress!
-        </p>
-
-        <p className="text-sm text-slate-500">
-          Click &quot;Add Task&quot; to begin
         </p>
       </CardContent>
     </Card>

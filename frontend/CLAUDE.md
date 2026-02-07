@@ -52,6 +52,12 @@ frontend/
 │   └── utils.ts                # Utility functions (cn helper)
 ├── types/
 │   └── task.ts                 # Task TypeScript interfaces
+├── docs/                       # Documentation files
+│   ├── README.md               # Frontend overview and setup
+│   ├── TESTING.md              # Manual testing scenarios
+│   ├── COOKIE-FIX.md           # Cookie configuration fixes
+│   ├── IMPLEMENTATION_COMPLETE.md  # Implementation completion notes
+│   └── PROGRESS-PHASE*.md      # Phase completion reports
 ├── .env.local                  # Environment variables (gitignored)
 ├── .env.example                # Environment variable template
 ├── components.json             # shadcn/ui configuration
@@ -228,7 +234,7 @@ Required in `.env.local` (see `.env.example`):
 
 ## Testing Checklist
 
-See `/frontend/TESTING.md` for comprehensive manual test scenarios covering:
+See `docs/TESTING.md` for comprehensive manual test scenarios covering:
 - Phase 3: Authentication (signup, login, protected routes)
 - Phase 4: Logout functionality
 - Phase 5: Task viewing and empty states

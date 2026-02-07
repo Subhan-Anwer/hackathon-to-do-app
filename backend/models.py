@@ -39,10 +39,11 @@ class Task(SQLModel, table=True):
 
     # Foreign key to user (managed by Better Auth)
     # CRITICAL: indexed for efficient user-scoped queries
-    user_id: UUID = Field(
+    # Note: Better Auth uses text-based IDs, not UUIDs
+    user_id: str = Field(
         index=True,
         nullable=False,
-        description="ID of the user who owns this task"
+        description="ID of the user who owns this task (Better Auth text format)"
     )
 
     # Task data
