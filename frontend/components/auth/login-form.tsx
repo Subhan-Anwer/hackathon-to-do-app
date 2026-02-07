@@ -17,7 +17,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signin } from "@/lib/simple-auth";
+import { signin } from "@/lib/auth-actions";
 
 // Validation schema
 const loginSchema = z.object({
@@ -39,7 +38,6 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -62,7 +60,8 @@ export function LoginForm() {
       }
 
       toast.success("Login successful!");
-      router.push("/tasks");
+      // Use full page reload to ensure cookies are sent with request
+      window.location.href = "/tasks";
     } catch {
       toast.error("An error occurred. Please try again.");
       setLoading(false);
