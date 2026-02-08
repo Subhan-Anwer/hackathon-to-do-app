@@ -16,7 +16,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -38,6 +38,13 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Fix hydration mismatch - only render form after client-side mount
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -61,12 +68,39 @@ export function LoginForm() {
 
       toast.success("Login successful!");
       // Use full page reload to ensure cookies are sent with request
-      window.location.href = "/tasks";
+      setTimeout(() => {
+        window.location.replace("/tasks");
+      }, 500);
     } catch {
       toast.error("An error occurred. Please try again.");
       setLoading(false);
     }
   };
+
+  // Prevent hydration mismatch by only rendering form after mount
+  if (!mounted) {
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Welcome Back</CardTitle>
+          <CardDescription>Sign in to your account to continue</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="h-4 w-12 bg-slate-200 rounded animate-pulse" />
+              <div className="h-10 bg-slate-100 rounded animate-pulse" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-16 bg-slate-200 rounded animate-pulse" />
+              <div className="h-10 bg-slate-100 rounded animate-pulse" />
+            </div>
+            <div className="h-10 bg-slate-200 rounded animate-pulse" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-md">

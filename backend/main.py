@@ -25,6 +25,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Validate required environment variables at startup
+BETTER_AUTH_SECRET = os.getenv("BETTER_AUTH_SECRET")
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not BETTER_AUTH_SECRET or len(BETTER_AUTH_SECRET) < 32:
+    raise ValueError(
+        "BETTER_AUTH_SECRET environment variable is required and must be at least 32 characters. "
+        "Generate one with: openssl rand -base64 32"
+    )
+
+if not DATABASE_URL:
+    raise ValueError(
+        "DATABASE_URL environment variable is required. "
+        "Configure PostgreSQL connection string with asyncpg driver."
+    )
+
+logger.info(f"✅ Environment validated (BETTER_AUTH_SECRET: {len(BETTER_AUTH_SECRET)} chars)")
+
 
 # Lifespan context manager for startup/shutdown events
 @asynccontextmanager
