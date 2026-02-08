@@ -10,17 +10,18 @@
  * Reference: specs/002-frontend-auth/spec.md (User Story 1, Scenarios 1 & 7)
  */
 
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth-actions";
+
+
+import Link from "next/link";
 
 export default async function HomePage() {
-  const session = await getSession();
-
-  if (session) {
-    // User is authenticated, redirect to tasks dashboard
-    redirect("/tasks");
-  } else {
-    // User is not authenticated, redirect to login
-    redirect("/login");
-  }
+  <main style={{ padding: "2rem", textAlign: "center" }}>
+    <h1>Hackathon II Todo App</h1>
+    <p>Welcome! Go to the tasks page:</p>
+    <Link href="/tasks">
+      <button style={{ padding: "1rem 2rem", fontSize: "1.2rem" }}>
+        View Tasks →
+      </button>
+    </Link>
+  </main>;
 }
