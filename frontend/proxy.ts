@@ -12,7 +12,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function middleware(_request: NextRequest) {
+export async function proxy(_request: NextRequest) {
   // Let all requests through - auth is handled by server components
   return NextResponse.next();
 }
