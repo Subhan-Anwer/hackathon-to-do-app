@@ -51,15 +51,19 @@ async def get_current_user(request: Request) -> str:
     # Try Authorization header first (Bearer token)
     auth_header = request.headers.get("Authorization")
     token = None
+    token_source = None
 
     if auth_header and auth_header.startswith("Bearer "):
         token = auth_header.split(" ")[1]
+        token_source = "Authorization header"
     else:
         # Fallback to cookie (Better Auth httpOnly cookie)
         token = request.cookies.get("session")
+        if token:
+            token_source = "session cookie"
 
     if not token:
-        logger.warning("Authentication failed: No token provided")
+        logger.warning(f"Authentication failed: No token provided. Headers: {dict(request.headers)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated - missing token"
@@ -81,7 +85,7 @@ async def get_current_user(request: Request) -> str:
         return user_id
 
     except JWTError as e:
-        logger.error(f"JWT validation failed: {e}")
+        logger.error(f"JWT validation failed: {type(e).__name__}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token - verification failed"

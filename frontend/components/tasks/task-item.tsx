@@ -23,7 +23,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EditTaskDialog } from "./edit-task-dialog";
 import { DeleteTaskDialog } from "./delete-task-dialog";
-import { taskApi } from "@/lib/api";
+import { toggleComplete } from "@/app/actions/tasks";
 import { toast } from "sonner";
 import type { Task } from "@/types/task";
 
@@ -40,7 +40,7 @@ export function TaskItem({ task, userId, onUpdate, onDelete }: TaskItemProps) {
 
   /**
    * Handle task completion toggle with optimistic UI update
-   * Updates UI immediately, then calls API
+   * Updates UI immediately, then calls Server Action
    * Reverts on error with toast notification
    * Reference: spec.md (User Story 4 Scenario 2, FR-018)
    */
@@ -55,7 +55,7 @@ export function TaskItem({ task, userId, onUpdate, onDelete }: TaskItemProps) {
     setIsToggling(true);
 
     try {
-      const updatedTask = await taskApi.toggleComplete(userId, task.id);
+      const updatedTask = await toggleComplete(userId, task.id);
 
       // Update parent state with server response
       if (onUpdate) {

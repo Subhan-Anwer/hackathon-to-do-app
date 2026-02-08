@@ -31,7 +31,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { taskApi } from "@/lib/api";
+import { deleteTask } from "@/app/actions/tasks";
 import { toast } from "sonner";
 
 interface DeleteTaskDialogProps {
@@ -54,7 +54,7 @@ export function DeleteTaskDialog({
     setIsDeleting(true);
 
     try {
-      await taskApi.delete(userId, taskId);
+      await deleteTask(userId, taskId);
 
       // Update parent state
       onTaskDeleted(taskId);

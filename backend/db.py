@@ -3,7 +3,8 @@
 This module configures the async database engine for Neon PostgreSQL using
 asyncpg driver and provides dependency injection for FastAPI routes.
 """
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv

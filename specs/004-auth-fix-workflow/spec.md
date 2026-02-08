@@ -1,168 +1,178 @@
-# Feature Specification: Authentication & Workflow Reliability Fixes
+# Feature Specification: JWT Bearer Token Authentication Fix
 
 **Feature Branch**: `004-auth-fix-workflow`
-**Created**: 2026-02-07
+**Created**: 2026-02-08
 **Status**: Draft
-**Input**: User description: "Create a new specification dedicated to debugging and fixing authentication and making the full-stack Todo app workflow smooth and reliable."
+**Input**: Fix 401 Unauthorized errors by implementing proper JWT Bearer token authentication between Next.js frontend and FastAPI backend
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Authenticated Task Creation Flow (Priority: P1)
+### User Story 1 - Authenticated Task Creation (Priority: P1)
 
-A logged-in user wants to create a new task immediately after authentication and see it appear in their task list without encountering authentication errors.
+A logged-in user wants to create a new task and have it successfully saved to their account without encountering 401 Unauthorized errors.
 
-**Why this priority**: This is the core user journey that validates end-to-end authentication integration between frontend and backend. Without this working, the application is non-functional.
+**Why this priority**: This is the core authentication flow that's currently broken. Without this, users cannot use the application.
 
-**Independent Test**: Can be fully tested by signing in with valid credentials, creating a task via the task form, and verifying the task appears in the task list without any 401 errors in the browser console or network tab.
+**Independent Test**: Sign in with valid credentials, fill out the task creation form, submit it, and verify the task appears in the task list without 401 errors in the browser console or network tab.
 
 **Acceptance Scenarios**:
 
-1. **Given** a user has successfully signed in, **When** they submit the task creation form, **Then** the task is created and appears in their task list immediately without any 401 Unauthorized errors
-2. **Given** a user is on the dashboard page with a valid session, **When** they perform any task operation (create/update/delete/toggle), **Then** all API requests include valid authentication credentials (JWT token or session cookie)
-3. **Given** a user has just signed up and is automatically signed in, **When** they create their first task, **Then** the task is successfully created and visible in their list
+1. **Given** a user has successfully signed in, **When** they submit the task creation form, **Then** the request includes `Authorization: Bearer <token>` header and the task is created successfully
+2. **Given** a user performs any task operation (create/update/delete/toggle), **When** the request is sent to the backend, **Then** the `Authorization: Bearer <token>` header is present with a valid JWT token
+3. **Given** a user's JWT token is valid, **When** the backend receives an authenticated request, **Then** it successfully verifies the token and returns the expected response
 
 ---
 
-### User Story 2 - Local Development Authentication (Priority: P1)
+### User Story 2 - Cross-Origin Authentication (Priority: P1)
 
-Developers working on localhost need authentication to work seamlessly between the Next.js frontend (http://localhost:3000) and FastAPI backend (http://localhost:8000) without cookie blocking issues.
+Developers working on localhost need task operations to work between frontend (localhost:3000) and backend (localhost:8000) without relying on cross-origin cookie transmission.
 
-**Why this priority**: Without working local development authentication, developers cannot test or build new features. This is a blocker for all development work.
+**Why this priority**: Cookie-based auth fails across different ports in development due to browser security policies. Bearer token authentication solves this.
 
-**Independent Test**: Can be fully tested by running both frontend and backend on localhost, signing in, and verifying that session cookies are sent correctly on HTTP connections and all authenticated API calls succeed.
+**Independent Test**: Run frontend on port 3000 and backend on port 8000, sign in, create a task, and verify the Authorization header is sent (not relying on cookies being sent cross-origin).
 
 **Acceptance Scenarios**:
 
-1. **Given** the application is running on localhost (HTTP), **When** a user signs in, **Then** the session cookie is set with appropriate attributes (secure: false, sameSite: "lax") and is sent with subsequent API requests
-2. **Given** a user is authenticated on localhost, **When** they make API requests to localhost:8000, **Then** requests include either the session cookie or Authorization Bearer token
-3. **Given** the backend is running in development mode, **When** it receives authenticated requests from localhost:3000, **Then** it successfully verifies the JWT token or session cookie
+1. **Given** the frontend runs on localhost:3000 and backend on localhost:8000, **When** a user creates a task, **Then** the request uses Authorization Bearer header instead of relying on cross-origin cookies
+2. **Given** a user is authenticated, **When** any API request is made, **Then** the JWT token is extracted from the Better Auth session and included in the Authorization header
+3. **Given** the backend receives a request with Authorization header, **When** it validates the JWT, **Then** it successfully extracts user_id and allows the operation
 
 ---
 
-### User Story 3 - Production HTTPS Authentication (Priority: P2)
+### User Story 3 - Production Deployment (Priority: P2)
 
-Users accessing the deployed production application need authentication to work securely over HTTPS with proper cookie security attributes.
+Users accessing the production application need the same authentication mechanism to work seamlessly in production environments.
 
-**Why this priority**: Production security is critical but comes after local development functionality is verified. This ensures the same authentication mechanisms work in both environments.
+**Why this priority**: The solution must work in both development and production without environment-specific code changes.
 
-**Independent Test**: Can be fully tested by deploying to production (HTTPS), signing in, and verifying that secure cookies work correctly with sameSite: "none" and secure: true attributes.
-
-**Acceptance Scenarios**:
-
-1. **Given** the application is running in production (HTTPS), **When** a user signs in, **Then** the session cookie is set with secure: true and sameSite: "none" attributes
-2. **Given** a user is authenticated in production, **When** they make API requests, **Then** cookies are sent correctly across HTTPS connections
-3. **Given** the backend is running in production mode, **When** it receives authenticated requests, **Then** it successfully verifies JWT tokens with the shared BETTER_AUTH_SECRET
-
----
-
-### User Story 4 - Clear Authentication Error Feedback (Priority: P2)
-
-Users experiencing authentication failures need clear, actionable feedback instead of silent failures or confusing errors.
-
-**Why this priority**: Good error handling improves user experience and reduces support burden. It's important but not blocking core functionality.
-
-**Independent Test**: Can be fully tested by simulating authentication failures (expired token, invalid credentials, network errors) and verifying that users see appropriate error messages and are redirected correctly.
+**Independent Test**: Deploy to production, sign in, perform task operations, and verify Authorization Bearer headers are used consistently.
 
 **Acceptance Scenarios**:
 
-1. **Given** a user's session has expired, **When** they attempt a task operation, **Then** they are redirected to the login page with a toast message indicating their session expired
-2. **Given** a user receives a 401 error from any API endpoint, **When** the error occurs, **Then** they see a user-friendly toast notification and are redirected to /login
-3. **Given** a user attempts to access a protected route without authentication, **When** the route loads, **Then** they are automatically redirected to /login with a message prompting them to sign in
-
----
-
-### User Story 5 - Task Operation UX Improvements (Priority: P3)
-
-Users performing task operations need visual feedback through loading states and success/error notifications to understand when operations are in progress or have completed.
-
-**Why this priority**: This enhances user experience but the core functionality can work without it. It's a polish layer on top of working authentication.
-
-**Independent Test**: Can be fully tested by performing task operations and verifying that loading spinners, success toasts, and automatic list refreshes occur as expected.
-
-**Acceptance Scenarios**:
-
-1. **Given** a user submits a task creation form, **When** the request is in progress, **Then** a loading indicator is displayed and the submit button is disabled
-2. **Given** a task operation succeeds, **When** the response returns, **Then** a success toast notification is shown and the task list refreshes automatically
-3. **Given** a task operation fails, **When** the error response returns, **Then** an error toast with a descriptive message is shown and the UI returns to its previous state
+1. **Given** the application is deployed to production, **When** a user signs in, **Then** Better Auth generates a JWT token that can be extracted and used for API requests
+2. **Given** a user performs task operations in production, **When** requests are sent to the backend, **Then** the Authorization Bearer header is included regardless of environment
+3. **Given** the backend verifies JWT tokens, **When** it receives production requests, **Then** it uses the same BETTER_AUTH_SECRET to validate tokens
 
 ---
 
 ### Edge Cases
 
-- What happens when a user's JWT token expires mid-session while they have unsaved form data?
-- How does the system handle race conditions when multiple task operations occur simultaneously?
-- What happens if the backend is unreachable when a user attempts to sign in?
-- How does the frontend handle receiving a 401 error on the initial page load vs during an API call?
-- What happens when BETTER_AUTH_SECRET is misconfigured (different between frontend and backend)?
-- How does the system behave when cookies are disabled in the user's browser?
-- What happens when a user manually deletes their session cookie from DevTools while authenticated?
+- What happens when Better Auth session doesn't contain an accessible JWT token?
+- How does the system handle JWT token extraction if Better Auth changes its session structure?
+- What happens if BETTER_AUTH_SECRET is misconfigured (different between frontend and backend)?
+- How does the frontend handle 401 errors when the token is expired or invalid?
+- What happens when a user manually clears cookies but the session state still exists?
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-**Authentication & JWT Plugin:**
+**JWT Token Extraction:**
 
-- **FR-001**: Better Auth MUST enable the JWT plugin to generate JWT tokens on user sign-in/sign-up
-- **FR-002**: Backend MUST verify JWT tokens using the shared BETTER_AUTH_SECRET to authenticate API requests
-- **FR-003**: Frontend MUST store JWT tokens in httpOnly cookies to prevent XSS attacks
-- **FR-004**: System MUST share the same BETTER_AUTH_SECRET value between frontend and backend via environment variables
+- **FR-001**: Frontend MUST extract JWT token from Better Auth session object server-side using `getSession()`
+- **FR-002**: System MUST identify the correct session property containing the JWT token (e.g., `session.token`, `session.access_token`, `session.jwt`)
+- **FR-003**: Token extraction MUST occur in Next.js server-side context (Server Components, Server Actions, or API Routes)
 
-**Environment-Aware Cookie Configuration:**
+**Authorization Header Implementation:**
 
-- **FR-005**: Session cookies MUST use environment-aware security attributes based on NODE_ENV
-- **FR-006**: In development (localhost HTTP), cookies MUST set secure: false and sameSite: "lax"
-- **FR-007**: In production (HTTPS), cookies MUST set secure: true and sameSite: "none"
-- **FR-008**: Cookie configuration MUST prevent cookie blocking on localhost HTTP connections
+- **FR-004**: All API requests to the FastAPI backend MUST include `Authorization: Bearer <token>` header
+- **FR-005**: Frontend MUST implement server-side API proxy or wrapper functions that add the Bearer token to requests
+- **FR-006**: Client-side components MUST call Next.js internal API routes (same-origin) instead of directly calling the backend
+- **FR-007**: Next.js API routes MUST forward requests to FastAPI backend with Authorization header added
 
-**API Authentication Mechanisms:**
+**Backend Token Verification:**
 
-- **FR-009**: API client MUST prefer sending Authorization: Bearer <token> header when JWT token is available
-- **FR-010**: API client MUST fall back to credentials: "include" for cookie-based authentication if Bearer token is unavailable
-- **FR-011**: API client MUST retrieve current JWT token from session using Better Auth's getSession() or equivalent method
-- **FR-012**: Backend MUST accept authentication via either Authorization: Bearer header OR session cookie
+- **FR-008**: FastAPI backend MUST read JWT token from `Authorization` header (format: `Bearer <token>`)
+- **FR-009**: Backend MUST verify JWT token using the shared `BETTER_AUTH_SECRET` environment variable
+- **FR-010**: Backend MUST extract `user_id` from verified JWT token for user isolation
+- **FR-011**: Backend MUST return 401 Unauthorized if Authorization header is missing or token is invalid
 
-**Error Handling & User Feedback:**
+**Error Handling:**
 
-- **FR-013**: System MUST redirect users to /login when any API endpoint returns 401 Unauthorized
-- **FR-014**: System MUST display a user-friendly toast notification when authentication fails, explaining the issue
-- **FR-015**: System MUST handle 401 errors consistently across all authenticated API calls
-- **FR-016**: Frontend MUST clear local authentication state when a 401 error is received
-
-**Task Operation UX:**
-
-- **FR-017**: Task creation/update/delete/toggle operations MUST display loading indicators while requests are in progress
-- **FR-018**: Task operations MUST show success toast notifications when operations complete successfully
-- **FR-019**: Task operations MUST show error toast notifications with descriptive messages when operations fail
-- **FR-020**: Task list MUST automatically refresh after successful create/update/delete/toggle operations
-- **FR-021**: Form inputs MUST be disabled during task operation submission to prevent duplicate requests
+- **FR-012**: Frontend MUST handle 401 responses by redirecting to `/login` page
+- **FR-013**: Frontend MUST display user-friendly toast notification when 401 errors occur
+- **FR-014**: Frontend MUST clear authentication state when 401 errors are received
 
 **Security Requirements:**
 
-- **FR-022**: Backend MUST enforce user isolation by filtering all task queries by authenticated user_id
-- **FR-023**: Backend MUST return 401 Unauthorized for requests without valid authentication credentials
-- **FR-024**: Backend MUST return 403 Forbidden when a user attempts to access another user's resources
-- **FR-025**: System MUST never expose cross-user data in API responses
+- **FR-015**: System MUST keep httpOnly cookies enabled (no security downgrade)
+- **FR-016**: Backend MUST filter all database queries by authenticated `user_id` to enforce user isolation
+- **FR-017**: System MUST use the same `BETTER_AUTH_SECRET` value in both frontend and backend environments
 
 ### Key Entities
 
-- **JWT Token**: Represents a signed JSON Web Token containing user identity (user_id, email) and expiration time, generated by Better Auth upon successful authentication
-- **Session Cookie**: HTTP-only cookie storing the JWT token, with security attributes (secure, sameSite) configured based on environment
-- **Authentication State**: Frontend state tracking current user session, including whether user is authenticated and their user identity
-- **API Request**: HTTP request to backend endpoints that must include authentication credentials via Authorization header or session cookie
-- **User Feedback**: Toast notifications and loading states that inform users about the status of their actions
+- **JWT Token**: A signed JSON Web Token containing user identity (user_id, email) generated by Better Auth upon authentication
+- **Better Auth Session**: Server-side session object containing the JWT token, accessible via `getSession()` in Next.js
+- **Authorization Header**: HTTP request header in the format `Authorization: Bearer <token>` that carries the JWT
+- **API Proxy/Wrapper**: Next.js Server Actions or API Routes that add Authorization headers before forwarding to the backend
+- **User Isolation**: Security principle ensuring all database queries filter by authenticated user_id
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can sign up, sign in, and immediately create a task without encountering any 401 Unauthorized errors (100% success rate in local development)
-- **SC-002**: Authentication works correctly on both localhost HTTP (development) and production HTTPS without manual cookie configuration changes
-- **SC-003**: Session cookies are successfully sent with API requests on localhost:3000 → localhost:8000 communication (verifiable in browser DevTools Network tab)
-- **SC-004**: JWT tokens are generated and visible in browser DevTools (Application > Cookies) after successful sign-in
-- **SC-005**: All task operations (create, list, update, delete, toggle) complete successfully for authenticated users without 401 errors (100% success rate)
-- **SC-006**: Users receive clear visual feedback within 200ms for all task operations (loading spinners appear immediately on action)
-- **SC-007**: Users see success or error toast notifications within 1 second of task operation completion
-- **SC-008**: Task list automatically refreshes within 1 second of successful create/update/delete/toggle operations
-- **SC-009**: 401 errors result in automatic redirect to /login page with user-friendly message (100% of cases)
-- **SC-010**: Multi-user testing confirms user isolation: User A cannot see or modify User B's tasks (0% data leak rate)
+- **SC-001**: Users can create tasks after signing in without encountering 401 Unauthorized errors (100% success rate)
+- **SC-002**: All API requests to the backend include `Authorization: Bearer <token>` header (verifiable in browser DevTools Network tab)
+- **SC-003**: Backend successfully verifies JWT tokens and extracts user_id from Authorization header (observable in backend logs)
+- **SC-004**: Authentication works in both development (localhost:3000 → localhost:8000) and production environments without code changes
+- **SC-005**: httpOnly cookies remain enabled throughout (no `httpOnly: false` in configuration)
+- **SC-006**: Multi-user testing confirms user isolation: User A cannot access User B's tasks (0% data leak rate)
+
+## Assumptions *(optional)*
+
+- Better Auth generates a JWT token during sign-in/sign-up that can be accessed from the session object
+- The JWT token structure follows standard JWT format (header.payload.signature)
+- Backend already has JWT verification middleware or can easily add it
+- Frontend can use Next.js 16+ Server Actions or API Routes for server-side token extraction
+- Both frontend and backend have access to the same BETTER_AUTH_SECRET environment variable
+
+## Dependencies & Risks *(optional)*
+
+### Dependencies
+
+- Better Auth library configured with JWT plugin enabled
+- Next.js 16+ with App Router for Server Components and Server Actions
+- FastAPI backend with JWT verification capability (e.g., PyJWT library)
+- Shared `BETTER_AUTH_SECRET` environment variable configured in both frontend and backend
+
+### Risks
+
+- **Risk**: Better Auth session object may not expose JWT token in expected format
+  - **Mitigation**: Inspect session object structure and adapt token extraction logic accordingly
+
+- **Risk**: Middleware or API route pattern may add latency to requests
+  - **Mitigation**: Use lightweight proxy pattern; measure performance impact
+
+- **Risk**: Server-side token extraction may fail in edge cases (no session, expired session)
+  - **Mitigation**: Implement robust error handling with fallback to login redirect
+
+## Files to Modify *(implementation guidance)*
+
+This section provides guidance on which files will need changes. Implementation details will be determined during the planning phase.
+
+**Frontend (Next.js):**
+
+- `frontend/lib/api.ts` - Update to use server-side token extraction or create new server-side wrappers
+- `frontend/app/api/tasks/route.ts` - Create API route to proxy task operations with Authorization header (or similar pattern)
+- `frontend/app/actions/tasks.ts` - Create Server Actions that add Authorization header (alternative to API routes)
+- `frontend/components/task-form.tsx` - Update to call new server-side API wrappers instead of direct backend calls
+- `frontend/components/task-list.tsx` - Update task operations to use new authentication pattern
+
+**Backend (FastAPI):**
+
+- `backend/main.py` - Verify JWT token verification middleware extracts token from Authorization header
+- `backend/routers/tasks.py` - Ensure all endpoints receive authenticated user_id from middleware
+
+**Configuration:**
+
+- `.env.example` - Document BETTER_AUTH_SECRET requirement if not already present
+- Verify both `frontend/.env.local` and `backend/.env` contain matching BETTER_AUTH_SECRET values
+
+## Out of Scope *(optional)*
+
+- Implementing refresh token rotation (use simple JWT with expiration)
+- Adding token caching or optimization (focus on correctness first)
+- Changing Better Auth configuration or JWT plugin settings beyond what's necessary
+- Implementing complex middleware patterns (keep it simple)
+- Modifying backend user isolation logic (already implemented, just needs correct user_id)
+- Changing cookie security settings (keep httpOnly enabled)

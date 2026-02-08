@@ -17,16 +17,16 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth-actions";
-import { taskApi } from "@/lib/api";
+import { listTasks } from "@/app/actions/tasks";
 import { Header } from "@/components/layout/header";
 import { TaskListSkeleton } from "@/components/tasks/task-list-skeleton";
 import { TasksPageClient } from "@/components/tasks/tasks-page-client";
 
 async function TasksContent({ userId }: { userId: string }) {
-  // Fetch tasks from backend API
-  let tasks: Awaited<ReturnType<typeof taskApi.list>> = [];
+  // Fetch tasks from backend API using Server Action
+  let tasks: Awaited<ReturnType<typeof listTasks>> = [];
   try {
-    tasks = await taskApi.list(userId);
+    tasks = await listTasks(userId);
   } catch {
     // Failed to fetch tasks - return empty array to show empty state
     tasks = [];

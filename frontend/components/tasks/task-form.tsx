@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { taskApi } from "@/lib/api";
+import { createTask, updateTask } from "@/app/actions/tasks";
 import type { Task, TaskCreateInput, TaskUpdateInput } from "@/types/task";
 
 // Validation schema matching backend requirements
@@ -71,20 +71,20 @@ export function TaskForm({ userId, task, onSuccess, onCancel }: TaskFormProps) {
       let result: Task;
 
       if (isEditing) {
-        // Update existing task
+        // Update existing task using Server Action
         const updateData: TaskUpdateInput = {
           title: data.title,
           description: data.description || undefined,
         };
-        result = await taskApi.update(userId, task.id, updateData);
+        result = await updateTask(userId, task.id, updateData);
         toast.success("Task updated successfully!");
       } else {
-        // Create new task
+        // Create new task using Server Action
         const createData: TaskCreateInput = {
           title: data.title,
           description: data.description || undefined,
         };
-        result = await taskApi.create(userId, createData);
+        result = await createTask(userId, createData);
         toast.success("Task created successfully!");
       }
 
