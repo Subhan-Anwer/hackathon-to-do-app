@@ -12,7 +12,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List
-from datetime import datetime, timezone
+from datetime import datetime
 from uuid import UUID as TaskId  # Only for task IDs, not user IDs
 import logging
 
@@ -255,7 +255,7 @@ async def update_task(
             task.completed = task_data.completed
 
         # Update timestamp (spec FR-011)
-        task.updated_at = datetime.now(timezone.utc)
+        task.updated_at = datetime.utcnow()
 
         db.add(task)
         await db.commit()
@@ -395,7 +395,7 @@ async def toggle_task_completion(
         task.completed = not task.completed
 
         # Update timestamp (spec FR-011)
-        task.updated_at = datetime.now(timezone.utc)
+        task.updated_at = datetime.utcnow()
 
         db.add(task)
         await db.commit()

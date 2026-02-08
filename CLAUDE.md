@@ -180,6 +180,111 @@ Example: `specs/001-task-crud/spec.md`, `specs/002-user-auth/plan.md`
 - `history/prompts/general/` - General interactions
 - `history/adr/` - Architectural Decision Records
 
+## Server Actions Authentication Pattern (Updated 2026-02-08)
+
+**Critical Pattern for Frontend API Calls:**
+
+All task CRUD operations use Next.js Server Actions with JWT Bearer token authentication.
+
+### Why Server Actions?
+
+1. **Cross-Origin Support**: Works on localhost:3000 → localhost:8000
+2. **Security**: JWT tokens generated server-side, never exposed to client JavaScript
+3. **Simplicity**: No middleware or API route boilerplate needed
+4. **Production Ready**: Same code works in development and production
+
+### Implementation Pattern
+
+```typescript
+// app/actions/tasks.ts (Server Action)
+"use server";
+
+import { SignJWT } from "jose";
+
+// Combined authentication and JWT generation helper
+async function authenticateAndGetToken(userId: string): Promise<string> {
+  // 1. Validate session (single database call)
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) throw new Error("Unauthorized - please log in");
+
+  // 2. Verify userId matches authenticated user
+  if (userId !== session.user.id) {
+    throw new Error("User ID mismatch - security violation");
+  }
+
+  // 3. Generate JWT token manually (HS256, sub=user_id, 7-day expiry)
+  const jwtToken = await new SignJWT({ sub: session.user.id })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(new TextEncoder().encode(process.env.BETTER_AUTH_SECRET));
+
+  return jwtToken;
+}
+
+export async function createTask(userId: string, data: TaskCreateInput): Promise<Task> {
+  // Authenticate and generate JWT token (single database call)
+  const jwtToken = await authenticateAndGetToken(userId);
+
+  // Call backend with Authorization Bearer header
+  const response = await fetch(`${API_BASE_URL}/api/${userId}/tasks`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    await handleFetchError(response, "create task");
+  }
+
+  return await response.json();
+}
+```
+
+**Key Implementation Details:**
+- **Manual JWT generation** using `jose` library (same as backend validation)
+- **HS256 algorithm** matches backend `dependencies.py`
+- **BETTER_AUTH_SECRET** shared between frontend and backend (must match exactly)
+- **Single database call** per Server Action (optimized for Neon serverless)
+
+### Usage in Components
+
+```typescript
+"use client";
+
+import { createTask } from "@/app/actions/tasks";
+
+async function handleSubmit(formData: FormData) {
+  try {
+    const task = await createTask(session.user.id, {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+    });
+    toast.success("Task created!");
+  } catch (error) {
+    toast.error(error.message);
+  }
+}
+```
+
+### Available Server Actions
+
+All exported from `app/actions/tasks.ts`:
+
+- `createTask(userId, data)` - Create new task
+- `listTasks(userId)` - List all user's tasks
+- `getTask(userId, taskId)` - Get single task
+- `updateTask(userId, taskId, data)` - Update task
+- `deleteTask(userId, taskId)` - Delete task
+- `toggleComplete(userId, taskId)` - Toggle completion
+
+**Documentation**: See `frontend/docs/SERVER-ACTIONS-AUTH.md` for complete implementation details.
+
+**Status**: ✅ Task creation working with JWT Bearer authentication (2026-02-08)
+
 ## Common Patterns
 
 ### Starting a New Feature
@@ -306,3 +411,10 @@ A feature is complete when:
 This is a **security-critical multi-user application**. Every line of code must uphold the principle: **users can only access their own data, always and without exception.**
 
 Refer to `@.specify/memory/constitution.md` as the single source of truth for all principles, standards, and governance.
+
+## Active Technologies
+- TypeScript 5 (frontend), Python 3.12 (backend) (004-auth-fix-workflow)
+- PostgreSQL (Neon Serverless) - no schema changes required (004-auth-fix-workflow)
+
+## Recent Changes
+- 004-auth-fix-workflow: Added TypeScript 5 (frontend), Python 3.12 (backend)

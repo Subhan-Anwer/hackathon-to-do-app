@@ -5,7 +5,7 @@ Every task belongs to exactly one user, enforcing Constitution Principle II.
 """
 from sqlmodel import SQLModel, Field
 from uuid import UUID, uuid4
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 
 
@@ -63,13 +63,13 @@ class Task(SQLModel, table=True):
         description="Completion status (false = incomplete, true = complete)"
     )
 
-    # Timestamps
+    # Timestamps (timezone-naive to match TIMESTAMP WITHOUT TIME ZONE column)
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        description="Timestamp when task was created (UTC)"
+        default_factory=datetime.utcnow,
+        description="Timestamp when task was created (UTC, timezone-naive)"
     )
 
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        description="Timestamp when task was last modified (UTC)"
+        default_factory=datetime.utcnow,
+        description="Timestamp when task was last modified (UTC, timezone-naive)"
     )
