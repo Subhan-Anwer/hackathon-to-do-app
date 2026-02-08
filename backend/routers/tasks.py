@@ -11,9 +11,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
-from uuid import UUID
 from typing import List
 from datetime import datetime, timezone
+from uuid import UUID as TaskId  # Only for task IDs, not user IDs
 import logging
 
 from db import get_db
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 @router.get("/{user_id}/tasks", response_model=List[TaskRead])
 async def list_tasks(
-    user_id: UUID,
+    user_id: str,
     current_user_id: str = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -37,7 +37,7 @@ async def list_tasks(
     SECURITY: Filters all tasks by user_id to prevent data leaks.
 
     Args:
-        user_id: User ID from URL path
+        user_id: User ID from URL path (Better Auth text format)
         current_user_id: Authenticated user ID from JWT token
         db: Database session
 
@@ -48,7 +48,7 @@ async def list_tasks(
         HTTPException 403: If user_id doesn't match authenticated user
     """
     # Verify user_id in path matches authenticated user (spec FR-003)
-    if str(user_id) != current_user_id:
+    if user_id != current_user_id:
         logger.warning(f"Authorization failed: user_id mismatch {user_id} != {current_user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -73,7 +73,7 @@ async def list_tasks(
 
 @router.post("/{user_id}/tasks", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
 async def create_task(
-    user_id: UUID,
+    user_id: str,
     task_data: TaskCreate,
     current_user_id: str = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
@@ -84,7 +84,7 @@ async def create_task(
     SECURITY: Sets user_id on task to authenticated user (not from request).
 
     Args:
-        user_id: User ID from URL path
+        user_id: User ID from URL path (Better Auth text format)
         task_data: Task creation data (title, description)
         current_user_id: Authenticated user ID from JWT token
         db: Database session
@@ -97,7 +97,7 @@ async def create_task(
         HTTPException 422: If validation fails (title empty or > 200 chars)
     """
     # Verify user_id in path matches authenticated user (spec FR-003)
-    if str(user_id) != current_user_id:
+    if user_id != current_user_id:
         logger.warning(f"Authorization failed: user_id mismatch {user_id} != {current_user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -105,10 +105,10 @@ async def create_task(
         )
 
     # Create task with authenticated user_id (spec FR-004)
-    # CRITICAL: use authenticated user, not path param
+    # CRITICAL: use authenticated user (str type), not path param
     try:
         task = Task(
-            user_id=UUID(current_user_id),
+            user_id=current_user_id,
             title=task_data.title,
             description=task_data.description
             # completed defaults to False (spec FR-012)
@@ -132,8 +132,8 @@ async def create_task(
 
 @router.get("/{user_id}/tasks/{task_id}", response_model=TaskRead)
 async def get_task(
-    user_id: UUID,
-    task_id: UUID,
+    user_id: str,
+    task_id: TaskId,
     current_user_id: str = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -143,8 +143,8 @@ async def get_task(
     SECURITY: Returns 404 if task doesn't exist OR belongs to different user.
 
     Args:
-        user_id: User ID from URL path
-        task_id: Task ID from URL path
+        user_id: User ID from URL path (Better Auth text format)
+        task_id: Task ID from URL path (UUID format)
         current_user_id: Authenticated user ID from JWT token
         db: Database session
 
@@ -156,7 +156,7 @@ async def get_task(
         HTTPException 404: If task not found or belongs to different user
     """
     # Verify user_id in path matches authenticated user (spec FR-003)
-    if str(user_id) != current_user_id:
+    if user_id != current_user_id:
         logger.warning(f"Authorization failed: user_id mismatch {user_id} != {current_user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -195,8 +195,8 @@ async def get_task(
 
 @router.put("/{user_id}/tasks/{task_id}", response_model=TaskRead)
 async def update_task(
-    user_id: UUID,
-    task_id: UUID,
+    user_id: str,
+    task_id: TaskId,
     task_data: TaskUpdate,
     current_user_id: str = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
@@ -208,8 +208,8 @@ async def update_task(
     Updates only provided fields (partial update).
 
     Args:
-        user_id: User ID from URL path
-        task_id: Task ID from URL path
+        user_id: User ID from URL path (Better Auth text format)
+        task_id: Task ID from URL path (UUID format)
         task_data: Task update data (title, description, completed)
         current_user_id: Authenticated user ID from JWT token
         db: Database session
@@ -223,7 +223,7 @@ async def update_task(
         HTTPException 422: If validation fails
     """
     # Verify user_id in path matches authenticated user (spec FR-003)
-    if str(user_id) != current_user_id:
+    if user_id != current_user_id:
         logger.warning(f"Authorization failed: user_id mismatch {user_id} != {current_user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -277,8 +277,8 @@ async def update_task(
 
 @router.delete("/{user_id}/tasks/{task_id}", response_model=dict)
 async def delete_task(
-    user_id: UUID,
-    task_id: UUID,
+    user_id: str,
+    task_id: TaskId,
     current_user_id: str = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -288,8 +288,8 @@ async def delete_task(
     SECURITY: Returns 404 if task doesn't exist OR belongs to different user.
 
     Args:
-        user_id: User ID from URL path
-        task_id: Task ID from URL path
+        user_id: User ID from URL path (Better Auth text format)
+        task_id: Task ID from URL path (UUID format)
         current_user_id: Authenticated user ID from JWT token
         db: Database session
 
@@ -301,7 +301,7 @@ async def delete_task(
         HTTPException 404: If task not found or belongs to different user
     """
     # Verify user_id in path matches authenticated user (spec FR-003)
-    if str(user_id) != current_user_id:
+    if user_id != current_user_id:
         logger.warning(f"Authorization failed: user_id mismatch {user_id} != {current_user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -343,8 +343,8 @@ async def delete_task(
 
 @router.patch("/{user_id}/tasks/{task_id}/complete", response_model=TaskRead)
 async def toggle_task_completion(
-    user_id: UUID,
-    task_id: UUID,
+    user_id: str,
+    task_id: TaskId,
     current_user_id: str = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -355,8 +355,8 @@ async def toggle_task_completion(
     Toggles: false → true, true → false.
 
     Args:
-        user_id: User ID from URL path
-        task_id: Task ID from URL path
+        user_id: User ID from URL path (Better Auth text format)
+        task_id: Task ID from URL path (UUID format)
         current_user_id: Authenticated user ID from JWT token
         db: Database session
 
@@ -368,7 +368,7 @@ async def toggle_task_completion(
         HTTPException 404: If task not found or belongs to different user
     """
     # Verify user_id in path matches authenticated user (spec FR-003)
-    if str(user_id) != current_user_id:
+    if user_id != current_user_id:
         logger.warning(f"Authorization failed: user_id mismatch {user_id} != {current_user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
