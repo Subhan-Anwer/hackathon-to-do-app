@@ -40,19 +40,14 @@ export default function Home() {
       </p>
 
       <div className="flex gap-4 flex-wrap justify-center">
-        <Link href="/login">
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Login
-          </button>
-        </Link>
-        <Link href="/signup">
-          <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
-            Sign Up
-          </button>
-        </Link>
         <Link href="/tasks">
           <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
             Go to Tasks
+          </button>
+        </Link>
+        <Link href="/login">
+          <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Login
           </button>
         </Link>
       </div>

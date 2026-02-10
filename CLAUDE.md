@@ -415,6 +415,8 @@ Refer to `@.specify/memory/constitution.md` as the single source of truth for al
 ## Active Technologies
 - TypeScript 5 (frontend), Python 3.12 (backend) (004-auth-fix-workflow)
 - PostgreSQL (Neon Serverless) - no schema changes required (004-auth-fix-workflow)
+- TypeScript 5.0 (frontend), Tailwind CSS v3.4 + Next.js 16+, shadcn/ui, Radix UI Primitives, Tailwind CSS, Framer Motion (for enhanced UX where needed) (005-ui-redesign)
+- N/A (frontend-only changes, consuming existing backend APIs) (005-ui-redesign)
 
 ## Recent Changes
 - 004-auth-fix-workflow: Added TypeScript 5 (frontend), Python 3.12 (backend)
